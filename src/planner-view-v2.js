@@ -1,0 +1,38 @@
+import { destinations } from './data.js';
+import { recommendPlaces } from './catalog.js';
+
+export function plannerMarkup({trip,state,ico,safe,yen,formatDate,addDate,allNodes}){
+  const selected=state.selectedDay==='all'?null:Math.max(1,Math.min(trip.days.length,Number(state.selectedDay)||1));
+  const day=selected?trip.days[selected-1]:null;
+  const nodes=day?.nodes||[];
+  const route=state.routeDay===selected?state.route:null;
+  const legByNode=new Map();
+  let locatedIndex=0;
+  for(const node of nodes){
+    if(node.lat!=null&&node.lng!=null){
+      if(route?.legs?.[locatedIndex])legByNode.set(node.id,route.legs[locatedIndex]);
+      locatedIndex++;
+    }
+  }
+  const suggestions=day?recommendPlaces(trip.destination,nodes,state.profile,state.profile.personalization?state.events:[],4):[];
+  const photo=destinations.find(d=>d.name===trip.destination)?.image||'';
+  const nextSteps=trip.checklist?.filter(c=>!c.done).length||0;
+  const totalPlaced=allNodes.filter(n=>n.lat!=null&&n.lng!=null).length;
+  const routeText=state.routeLoading?'正在计算道路路线':route?`${route.distanceKm} km · 约 ${route.durationMin} 分钟 · ${route.mode==='auto'?'驾车':'步行'}`:state.routeError||'选择日期后查询道路路线';
+  const money=allNodes.reduce((sum,n)=>sum+(Number(n.cost)||0),0);
+  return `<main class="journal-page">
+    <section class="journal-hero ${photo?'':'no-photo'}" ${photo?`style="--journal-photo:url('${photo}')"`:''}>
+      <div class="journal-hero-top"><span>${ico('compass',17)} XIANGYE / TRIP STUDIO</span><span class="journal-hero-tag">${trip.demo?'精选行程 · 可自由修改':'我的旅行计划'} · v${trip.version}</span></div>
+      <div class="journal-hero-main"><div><p class="journal-overline">把喜欢的地方，写进沿途。</p><h1>${safe(trip.destination)}<em>，慢慢走。</em></h1><p class="journal-hero-sub">${safe(trip.origin)}出发 · ${formatDate(trip.start)} — ${formatDate(trip.end)} · ${trip.party} 位旅人</p></div><div class="journal-hero-actions"><button data-modal="tripSettings">${ico('calendar',17)} 编辑旅程</button><button data-modal="import">${ico('book',17)} 导入攻略</button><button data-action="share">${ico('copy',17)} 分享行程</button></div></div>
+      <div class="journal-hero-bottom"><div><b>${String(trip.days.length).padStart(2,'0')}</b><span>天的旅程</span></div><i></i><div><b>${String(totalPlaced).padStart(2,'0')}</b><span>已定位地点</span></div><i></i><div><b>${yen(trip.budget)}</b><span>整单预算</span></div><div class="journal-hero-select"><span>正在编辑</span><select id="tripSelect" aria-label="切换行程">${state.trips.map(t=>`<option value="${safe(t.id)}" ${t.id===trip.id?'selected':''}>${safe(t.title)}</option>`).join('')}</select><button data-nav="new" aria-label="新建行程">${ico('plus',18)}</button></div></div>
+    </section>
+    <div class="journal-toolbar"><div><span class="journal-section-index">01 / PLAN YOUR DAYS</span><h2>把每天安排得刚刚好</h2><p>挑选日期、调整地点顺序，地图与路线会随之更新。</p></div><div class="journal-toolbar-actions"><button data-view="calendar">${ico('calendar',17)} 日历</button><button data-view="budget">${ico('wallet',17)} 预算与清单 <span>${nextSteps}</span></button><button data-nav="market">${ico('ticket',17)} 机酒玩乐</button></div></div>
+    <div class="journal-days"><button class="journal-day ${selected===null?'active':''}" data-day="all"><span>OVERVIEW</span><strong>全部旅程</strong><small>${trip.days.length} 天 · ${allNodes.length} 个安排</small></button>${trip.days.map((d,i)=>`<button class="journal-day ${selected===i+1?'active':''}" data-day="${i+1}"><span>DAY ${String(i+1).padStart(2,'0')} <b>${formatDate(addDate(trip.start,i))}</b></span><strong>${safe(d.title)}</strong><small title="${safe(d.note)}">${d.nodes.filter(n=>n.lat!=null).length} 个地点 · 已知费用 ${yen(d.nodes.reduce((sum,n)=>sum+(Number(n.cost)||0),0))}</small></button>`).join('')}</div>
+    <div class="journal-workspace">
+      <section class="journal-map"><div class="journal-map-top"><div><span>THE ROUTE / 路线地图</span><strong>${selected?`第 ${selected} 天 · ${safe(trip.destination)}`:'完整行程地图'}</strong></div><div><button class="journal-layer-toggle" data-action="toggleMapLayer" title="切换城市地图样式" aria-label="切换城市地图样式">${ico('map',18)}<span>${state.mapLayer==='positron'?'简洁地图':'城市地图'}</span></button><button data-action="fitMap" title="显示所有地点">${ico('map',18)}</button><button data-view="calendar" title="日历视图">${ico('calendar',18)}</button></div></div><div class="journal-map-canvas"><div id="map" role="application" aria-label="真实地理底图与行程地点"></div><div class="journal-map-route">${ico('route',16)} <span>${safe(routeText)}</span></div><div class="journal-map-scale"><span><i></i> 行程地点</span><span><i></i> 道路路线</span></div></div><div class="journal-map-caption"><span>${ico('pin',16)} 城市地图 © OpenFreeMap / OpenStreetMap；地点搜索来自百度地图；道路路线来自 Valhalla</span><button data-nav="journey">进入出发模式 ${ico('arrow',16)}</button></div></section>
+      <aside class="journal-itinerary"><div class="journal-itinerary-top"><div><span>${selected?`DAY ${String(selected).padStart(2,'0')}`:'ALL DAYS'} / 行程安排</span><h2>${selected?safe(day.title):'每一天，都有新发现'}</h2><p>${selected?safe(day.note):'选择一天，查看沿途地点与道路路线。'}</p></div><button data-modal="placeSearch" title="添加地点">${ico('plus',21)}</button></div>${selected?`<div class="journal-route-summary"><span>${ico('route',16)} ${safe(routeText)}</span><small>${nodes.length} 站 · ${yen(nodes.reduce((sum,n)=>sum+(Number(n.cost)||0),0))} 已知费用</small></div><div class="journal-stops">${nodes.map((n,i)=>`<div class="journal-stop ${state.selectedNode===n.id?'selected':''}"><div class="journal-stop-order"><b>${String(i+1).padStart(2,'0')}</b>${i<nodes.length-1?'<i></i>':''}</div><div class="journal-stop-content"><button class="journal-stop-open" data-node="${safe(n.id)}"><span>${safe(n.time)} <i>·</i> ${safe(n.duration)}</span><strong>${safe(n.name)}</strong><small>${safe(n.type)} · ${safe(n.costLabel)}${n.locked?' · 已锁定':''}</small></button>${legByNode.has(n.id)?`<div class="journal-leg">下一站 ${legByNode.get(n.id).distanceKm} km · 约 ${legByNode.get(n.id).durationMin} 分钟</div>`:''}</div><div class="journal-stop-move"><button data-move="up" data-id="${safe(n.id)}" aria-label="上移${safe(n.name)}" ${i===0||n.locked?'disabled':''}>↑</button><button data-move="down" data-id="${safe(n.id)}" aria-label="下移${safe(n.name)}" ${i===nodes.length-1||n.locked?'disabled':''}>↓</button></div></div>`).join('')}</div>`:`<div class="journal-overview">${trip.days.map((d,i)=>`<button data-day="${i+1}"><b>0${i+1}</b><span><strong>${safe(d.title)}</strong><small>${formatDate(addDate(trip.start,i))} · ${d.nodes.map(n=>n.name).slice(0,3).map(safe).join(' · ')}</small></span>${ico('arrow',16)}</button>`).join('')}</div>`}<div class="journal-itinerary-bottom"><button data-modal="placeSearch">${ico('plus',17)} 添加地点</button><button data-action="optimizeDay" ${!selected?'disabled':''}>${ico('route',17)} 优化顺序</button></div></aside>
+    </div>
+    <section class="journal-ideas"><div class="journal-ideas-head"><div><span class="journal-section-index">02 / A LITTLE INSPIRATION</span><h2>${selected?'附近还有这些好去处':'从一天开始，发现沿途'}</h2><p>依据当天位置、旅行偏好与最近浏览来排序。</p></div><button data-nav="profile">调整我的偏好 ${ico('arrow',16)}</button></div><div class="journal-idea-grid">${suggestions.length?suggestions.map((p,i)=>`<article class="journal-idea"><span class="journal-idea-no">0${i+1}</span><span class="journal-idea-category">${safe(p.category)}</span><h3>${safe(p.name)}</h3><p>${safe(p.reason)}</p><small>${safe(p.description)}</small><button data-add-catalog="${safe(p.id)}">加入第 ${selected} 天 ${ico('plus',16)}</button></article>`).join(''):`<div class="journal-idea-empty">${selected?'没有更多精选地点，可以搜索地图添加。':'选择日期后查看当天的地点建议。'}</div>`}</div></section>
+    <div class="journal-disclosure">地图展示城市街道与真实地点坐标；路线使用道路服务计算。开放时间、车票、酒店与门票价格请在出发前核验。已录入和模拟预算 ${yen(money)}。</div>
+  </main>`;
+}

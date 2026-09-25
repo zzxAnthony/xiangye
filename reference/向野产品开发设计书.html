@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>向野 App 全项目开发说明书</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+
+<style>
+:root{--ink:#18291f;--green:#2f604a;--pale:#edf4e9;--line:#ccd9cd;--paper:#f7f5eb}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);line-height:1.72;max-width:920px;margin:0 auto;padding:46px 48px 100px;background:#fff;font-size:15px}
+h1,h2,h3{line-height:1.35;letter-spacing:.01em}h1{font-size:34px;margin:0 0 12px}h2{font-size:24px;margin:55px 0 20px;padding-bottom:10px;border-bottom:1px solid var(--line)}h3{font-size:18px;margin:32px 0 12px;color:#214934}
+p{margin:12px 0}blockquote{margin:20px 0;padding:10px 18px;border-left:4px solid var(--green);background:var(--pale)}blockquote p{margin:0}
+a{color:var(--green)}table{border-collapse:collapse;width:100%;margin:17px 0 26px;font-size:14px}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}th{background:var(--pale)}tr:nth-child(even) td{background:#fafcf9}
+pre{background:#f4f7f3;border:1px solid var(--line);border-radius:10px;padding:16px;overflow:auto;font-size:13px;line-height:1.5}code{font-family:ui-monospace,Consolas,monospace;background:#f3f6f1;padding:1px 3px;border-radius:3px}pre code{background:none;padding:0}
+.brand-logo{display:inline-block;margin:16px 15px 20px 0}.brand-logo svg{height:180px;max-width:100%;width:auto;vertical-align:middle}li{margin:7px 0}hr{border:0;border-top:1px solid var(--line)}
+@media(max-width:650px){body{padding:25px 18px;font-size:14px}h1{font-size:28px}h2{font-size:21px}table{display:block;overflow-x:auto}.brand-logo svg{height:145px}}
+@media print{body{padding:0;max-width:none;font-size:11pt}h2{page-break-after:avoid}table,pre,.brand-logo{break-inside:avoid}a{color:var(--ink)}}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">向野 App 全项目开发说明书</h1>
+</header>
+<h1 id="向野-app-全项目开发说明书">向野 App 全项目开发说明书</h1>
+<p>版本 2.1｜2026 年 9 月 25 日｜供产品负责人指挥开发 Agent 使用</p>
+<blockquote>
+<p>本书对应完整移动 App，而非单一 AI
+行程功能。默认首发中国大陆境内自由行，界面为简体中文，金额为人民币，时间按目的地时区展示。文内图示车次、酒店、金额与商家名称只用于界面演示，生产环境必须接入合法授权的数据源并重新核验。</p>
+</blockquote>
+<h2 id="0-如何使用这份说明书">0 如何使用这份说明书</h2>
+<p>本书由 <strong>产品范围 → 页面与交互 → 视觉设计图 → 技术与接口 →
+Agent 任务包 → 验收</strong> 组成。开发时先落地第 3
+节的实体和状态约定，再按第 5
+节页面编号分工。每张设计图的编号与页面编号一致；图只表达布局与层级，文字规格和状态规则以本书为准。配套的<a
+href="向野App界面设计图.html">《向野 App 界面设计图》</a>有 12
+张基础页面；<a
+href="向野多日行程地图交互稿.html">《多日行程地图交互稿》</a>可切换 3
+天、点选地图节点并演示替换；<a
+href="向野机酒预订界面稿.html">《机酒预订界面稿》</a>有 7
+张机票、火车票、酒店和订单界面。Logo 有 3 个可编辑 SVG 源稿。</p>
+<p><strong>负责人需要决定的未定项：</strong> “AI
+入境”暂解释为“到达地点后用相机叠加地点介绍和留言”，功能名暂定“向野实景”；是否直接承接订单，默认先由合作方完成交易；Logo
+默认采用 A 方案。以上不会阻塞第一阶段开发，均以 feature flag 控制。</p>
+<p><strong>交付定义：</strong>
+一个用户能从输入出发地、目的地、日期和预算，得到真实来源可追溯的逐时行程图；用自然语言或点击节点修改；让小野解释、预览并确认改动；出行当天按图执行。商品、实景与社区分阶段接入，但在信息架构和数据模型中预留完整位置。</p>
+<h2 id="1-产品边界与版本路线">1 产品边界与版本路线</h2>
+<h3 id="11-产品定位和原则">1.1 产品定位和原则</h3>
+<p>向野是“能执行、能修改、能陪伴”的旅行
+App。用户不需要先学会制作攻略，只需输入基本约束；系统生成包含城际交通、站点到景点的市内交通、游玩、餐饮、酒店与返程的行程图。图上的每个点是可打开、可替换、有来源的对象；点之间的线是有出发时间、方式、耗时和费用的交通段。</p>
+<p>四条产品原则：①不编造具体班次、库存和价格；②所有 AI
+改动先预览再确认；③已订、锁定或已完成的节点得到保护；④相机、位置、公开分享都由用户主动触发。地图路线/地点数据与交通票务/酒店报价属于不同供应来源；地图
+API 本身不代表具有可售票或酒店实时库存。[R1][R2]</p>
+<h3 id="12-版本矩阵">1.2 版本矩阵</h3>
+<table>
+<thead>
+<tr class="header">
+<th>能力</th>
+<th>R0 可开发演示</th>
+<th>R1 首发 MVP</th>
+<th>R2 商业与社区</th>
+<th>R3 增强</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>输入与生成</td>
+<td>模拟数据 + 契约</td>
+<td>授权地图、真实供应商接入可用部分</td>
+<td>多城与复杂约束</td>
+<td>多人协作</td>
+</tr>
+<tr class="even">
+<td>多日地图与双模式编辑</td>
+<td>三日地图交互原型</td>
+<td>分天路线、地图点/列表同步、服务端版本与校验</td>
+<td>多城概览、离线快照与延误重排</td>
+<td>协作编辑</td>
+</tr>
+<tr class="odd">
+<td>小野</td>
+<td>解释与改图草稿</td>
+<td>真实工具调用、在途问答</td>
+<td>授权提醒与足迹总结</td>
+<td>个性化偏好</td>
+</tr>
+<tr class="even">
+<td>机票火车票酒店预订</td>
+<td>完整 mock 搜索/详情/确认/订单</td>
+<td>有授权供应商时展示与跳转，回流订单状态</td>
+<td>有创建订单与支付能力的合作方可启用 App 内完整预订</td>
+<td>自营交易须另立资质与履约项目</td>
+</tr>
+<tr class="odd">
+<td>景点餐饮影院团购</td>
+<td>仅演示入口</td>
+<td>授权商品的查询与跳转</td>
+<td>多供应商比价、优惠与订单回流</td>
+<td>更广品类</td>
+</tr>
+<tr class="even">
+<td>到点实景</td>
+<td>地点页静态原型</td>
+<td>主动定位 + 地点确认</td>
+<td>相机覆盖层、留言与审核</td>
+<td>空间锚点试点</td>
+</tr>
+<tr class="odd">
+<td>社区与足迹</td>
+<td>信息架构</td>
+<td>个人私密足迹</td>
+<td>动态、评论、收藏、举报</td>
+<td>话题、共创线路</td>
+</tr>
+<tr class="even">
+<td>行前与在途工具</td>
+<td>收藏与预算预览</td>
+<td>行李/证件提醒、票据入口、逐日费用</td>
+<td>天气备选、共享行程、开支记录</td>
+<td>分账与同行投票</td>
+</tr>
+</tbody>
+</table>
+<p>不纳入首发：自动帮用户支付或退票、未经授权抓取 OTA
+价格、后台持续拍摄/定位、未实测覆盖的厘米级室外
+AR、自动发布旅行日记。</p>
+<h3 id="13-用户任务和北极星">1.3 用户任务和北极星</h3>
+<p>主任务 A：规划一趟预算内的旅行；任务 B：临时换点或延后出发；任务
+C：旅途中确认下一步；任务 D：到点看攻略、留下回忆；任务
+E：找到与行程兼容的商品。北极星候选为“保存后在旅行当天被实际打开的有效行程数”，同时监控首图生成率、来源完整率、局部修改成功率、预算超标率、失效报价点击率与
+UGC 有效举报率。指标仅是初始建议，内测后定目标。</p>
+<p><strong>地图是主界面，不是辅助缩略图。</strong>
+用户可以先看跨多天行程覆盖范围，再进入某天的详细路线；从地图点开任何行程节点直接查看、替换、锁定或导航。时间轴与地图共用一张有向图，所有编辑都同步反映在两个视图。</p>
+<h2 id="2-信息架构和关键用户流程">2 信息架构和关键用户流程</h2>
+<h3 id="21-五个一级入口">2.1 五个一级入口</h3>
+<table>
+<thead>
+<tr class="header">
+<th>底部导航</th>
+<th>功能子页</th>
+<th>首页默认模块</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>发现</td>
+<td>推荐目的地、玩法合集、地点详情、社区动态</td>
+<td>出发灵感卡、周末玩法、热门地点</td>
+</tr>
+<tr class="even">
+<td>计划</td>
+<td>创建行程、多日地图、每日路线、版本、预算、分享</td>
+<td>最近行程、跨天地图与时间轴</td>
+</tr>
+<tr class="odd">
+<td>出发</td>
+<td>今天的行程、下一站、导航、提醒</td>
+<td>当前进行中的旅行与下一段交通</td>
+</tr>
+<tr class="even">
+<td>足迹</td>
+<td>我的旅行地图、相册、日记、私密/公开内容</td>
+<td>已完成旅行时间线</td>
+</tr>
+<tr class="odd">
+<td>我的</td>
+<td>账号、偏好、订单跳转记录、通知、隐私</td>
+<td>身份和设置</td>
+</tr>
+</tbody>
+</table>
+<p>“小野”是全局浮动入口，不占底栏；行程上下文存在时默认读取当前版本，无行程时作为规划问答助手。商品不占独立底栏，挂在地点页、节点详情和发现页。社区主入口在发现页的“动态”标签、地点页的留言区和足迹发布页。</p>
+<h3 id="22-主链路-a-创建行程">2.2 主链路 A 创建行程</h3>
+<p><code>发现/计划 → 新建计划 → 输入出发地、目的地、时间、预算 → 补充人数与偏好 → 生成进度 → 行程图 → 查看来源和费用 → 保存 → 出发模式</code>。城市名重名时弹出选择器；预算分“每人/整单”，默认整单且含往返；用户手工输入位置不需要定位许可。生成过程是异步任务，退出页面后可返回查看，不重复扣费或生成重复版本。</p>
+<p>对于 3
+天及以上行程，生成完成后先落到“全部日期地图总览”，展示各日区域和过夜点；从日期条选某一天进入地图+时间轴分屏。用户也可从日历视图检视每天开始、结束、酒店和预算。周边候选只影响选中的日子，跨日更改有明确提示。</p>
+<h3 id="23-主链路-b-修改节点">2.3 主链路 B 修改节点</h3>
+<p><code>行程图点节点 → 节点详情 → 替换 → 候选列表 → 差异预览 → 用户确认 → 新版本</code>。只重算目标点与受影响交通边；如果修改跨越当天或导致酒店、返程冲突，差异预览明确列出全部受影响点。候选不足时说明原因并允许用户手动搜索
+POI。</p>
+<h3 id="24-主链路-c-自然语言修改">2.4 主链路 C 自然语言修改</h3>
+<p><code>小野输入“第二天上午换成室内，酒店别动” → 解析目标与保护条件 → 改图草稿 → 差异预览 → 保存或继续修改</code>。目标不明确时小野列出可能节点让用户点选；已订节点变更需要单独确认并跳转原供应商办理，不执行订单取消。</p>
+<h3 id="25-主链路-d-在途和到点">2.5 主链路 D 在途和到点</h3>
+<p><code>出发页 → 当前节点 → 导航/票据入口 → 到达确认 → 地点页/实景 → 小野现场问答 → 私密留言或公开发布 → 足迹</code>。首次打开相机或位置功能时按需授权；无权限时可手选地点并查看地点内容。</p>
+<h2 id="3-全局状态数据来源与设计系统">3
+全局状态、数据来源与设计系统</h2>
+<h3 id="31-状态枚举">3.1 状态枚举</h3>
+<p>行程
+<code>draft/generating/ready/in_progress/completed/archived/failed</code>；节点
+<code>planned/locked/booked/completed/skipped/conflict</code>；报价
+<code>verified/estimated/unknown/expired/unavailable</code>；帖子
+<code>draft/pending/published/rejected/removed</code>。前端颜色只辅助识别，必须同步显示文字状态。所有金额为整数分，显示格式由客户端统一处理；时间持久化
+UTC，展示使用地点时区。</p>
+<h3 id="32-数据真实性和销售边界">3.2 数据真实性和销售边界</h3>
+<table>
+<thead>
+<tr class="header">
+<th>状态</th>
+<th>来源条件</th>
+<th>用户看到的表达</th>
+<th>操作限制</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>已核验</td>
+<td>合作供应商返回班次/房价/库存及查询时间</td>
+<td>“¥xxx 起 · 10:32 查询”与来源</td>
+<td>购买前再次校验</td>
+</tr>
+<tr class="even">
+<td>参考</td>
+<td>地图 POI、导航路线、公开营业时间</td>
+<td>“参考路线/营业时间，以现场为准”</td>
+<td>可加入计划，不宣称售卖</td>
+</tr>
+<tr class="odd">
+<td>估算</td>
+<td>规则估计打车、餐饮、住宿区间</td>
+<td>“估算 ¥a–b”附计算假设</td>
+<td>无购买按钮</td>
+</tr>
+<tr class="even">
+<td>待查询</td>
+<td>未接入、超时或无结果</td>
+<td>“班次待查询/价格待查询”</td>
+<td>禁止模型补出数字</td>
+</tr>
+<tr class="odd">
+<td>已失效</td>
+<td>报价过期/无货</td>
+<td>“已失效，重新查询”</td>
+<td>禁止旧价下单</td>
+</tr>
+</tbody>
+</table>
+<p><strong>重要：</strong> 用于演示的“上海虹桥—杭州东
+09:10”等时刻只能在设计图显示“示意”，不能进入生产数据。模型被限制为解释结构化候选，不可自行生成真实世界的票务事实。规划服务必须记录
+<code>provider</code>、<code>fetched_at</code>、<code>expires_at</code>、<code>provider_ref</code>
+与 <code>license_scope</code>。[R1][R2]</p>
+<h3 id="33-视觉规范">3.3 视觉规范</h3>
+<p>品牌主色森林绿 <code>#2F604A</code>，强调草芽绿
+<code>#BCE39A</code>，暖纸白 <code>#F7F5EB</code>，文字墨绿
+<code>#18291F</code>，错误红 <code>#B23A3A</code>，提示黄
+<code>#E9B95B</code>。页面白底或暖白底，卡片圆角 16，按钮圆角
+14，手机横向留白 20，8 像素栅格；正文 14–16，辅助 12–13，标题
+24–30。一级按钮绿色白字，次级按钮白底绿边；底栏五等分。最小可点面积建议
+44×44 px，支持系统动态字号与屏幕阅读器。</p>
+<p><strong>Logo：</strong> A 山野箭头用于 App 图标；B
+路线双点用于加载和图谱；C “向野”字标用于启动页和分享页。三方案均为概念
+SVG；后续需商标、字体和视觉原创性确认。小野的角色视觉采用 A
+图标中的小圆点/箭头组合：聊天头像为圆润小山形，状态“倾听/思考/完成”分别使用轻微呼吸、路径生长、星点闪现动画；减少对低端机的动效负担。</p>
+<p><figure class="brand-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="向野 山野方向标志">
+  <rect width="512" height="512" rx="112" fill="#2F604A"/>
+  <path d="M90 333 191 211 257 283 365 144 427 220" fill="none" stroke="#F7F5EB" stroke-width="29" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M235 372c56-20 96-70 130-228m-53 18 53-18 22 49" fill="none" stroke="#BCE39A" stroke-width="23" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="101" cy="121" r="16" fill="#DCEE9B"/>
+</svg>
+</figure> <figure class="brand-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="向野 双向路径标志">
+  <rect width="512" height="512" rx="112" fill="#F7F5EB"/>
+  <path d="M115 359c29-47 61-60 101-40 39 20 67 5 82-39 16-46 54-51 94-108" fill="none" stroke="#2F604A" stroke-width="30" stroke-linecap="round"/>
+  <circle cx="109" cy="367" r="29" fill="#2F604A"/>
+  <circle cx="377" cy="171" r="33" fill="#BCE39A" stroke="#2F604A" stroke-width="13"/>
+  <path d="m370 91 20-28 10 33 34 9-31 17" fill="#DCEE9B"/>
+</svg>
+</figure> <figure class="brand-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 512" role="img" aria-label="向野 中文字标">
+  <rect width="1024" height="512" rx="64" fill="#F7F5EB"/>
+  <path d="M125 326c46-89 95-139 158-189m-64-3 64 3-4 66" fill="none" stroke="#2F604A" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="117" cy="337" r="21" fill="#BCE39A"/>
+  <text x="337" y="329" fill="#18291F" font-family="Noto Sans CJK SC, Source Han Sans SC, PingFang SC, Microsoft YaHei, sans-serif" font-size="196" font-weight="700" letter-spacing="22">向野</text>
+  <text x="345" y="408" fill="#2F604A" font-family="Arial, sans-serif" font-size="35" letter-spacing="12">XIANGYE</text>
+</svg>
+</figure></p>
+<h3 id="34-共用组件清单">3.4 共用组件清单</h3>
+<p><code>XYAppBar</code>、<code>XYTabBar</code>、<code>XYButton</code>、<code>XYChip</code>、<code>XYMoney</code>、<code>XYSourceBadge</code>、<code>XYTripNode</code>、<code>XYTripEdge</code>、<code>XYOfferCard</code>、<code>XYPoiCard</code>、<code>XYChatBubble</code>、<code>XYDiffRow</code>、<code>XYBottomSheet</code>、<code>XYEmptyState</code>、<code>XYPermissionPrompt</code>、<code>XYToast</code>、<code>XYSkeleton</code>。每个组件需定义默认/按下/禁用/加载/错误状态、语义标签与浅色背景对比度。图谱节点不依赖单一颜色表达价格来源。</p>
+<p>地图与交易组件：<code>XYDayStrip</code>、<code>XYMapMarker</code>、<code>XYMapLegend</code>、<code>XYMapTimelineSheet</code>、<code>XYTransitSegment</code>、<code>XYTripCalendarCard</code>、<code>XYBudgetBreakdown</code>、<code>XYFareCard</code>、<code>XYHotelRateCard</code>、<code>XYPolicyDisclosure</code>、<code>XYBookingStatus</code>、<code>XYOrderPriceBreakdown</code>。地图点需测试触控与聚合；商品卡在列表与地图底抽屉使用同一价格来源标识。</p>
+<h3 id="35-成熟产品的结构参考">3.5 成熟产品的结构参考</h3>
+<table>
+<thead>
+<tr class="header">
+<th>公开产品能力</th>
+<th>可借鉴的交互原则</th>
+<th>向野如何处理</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>携程公开介绍覆盖机票、火车票、酒店、景点与订单服务 [R8]</td>
+<td>预订从搜索、筛选、详情、确认、订单到售后形成闭环</td>
+<td>入口挂在行程对应节点，购买后核对整张多日图</td>
+</tr>
+<tr class="even">
+<td>Wanderlog 公开展示行程与地图同屏 [R9]</td>
+<td>同时理解“点在哪里”和“什么时候去”</td>
+<td>多日总览、单日地图与时间轴共用一个图版本，地图点可替换</td>
+</tr>
+<tr class="odd">
+<td>携程商旅公开描述行程变化会影响关联订单 [R10]</td>
+<td>修改计划时提示订单影响</td>
+<td>预览列出受影响机票/酒店，改图不自动退订</td>
+</tr>
+</tbody>
+</table>
+<p>只借鉴信息架构和交互原则，不照搬产品的图标、品牌色、页面布局和文案。向野的辨识点是可编辑的多日地图与小野生成的可确认差异。</p>
+<h2 id="4-app-全页面清单与路由">4 App 全页面清单与路由</h2>
+<table>
+<thead>
+<tr class="header">
+<th>ID</th>
+<th>路由</th>
+<th>页面</th>
+<th>优先级</th>
+<th>对应设计图</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>S01</td>
+<td><code>/onboarding</code></td>
+<td>欢迎与隐私引导</td>
+<td>R1</td>
+<td>品牌页</td>
+</tr>
+<tr class="even">
+<td>S02</td>
+<td><code>/discover</code></td>
+<td>发现首页</td>
+<td>R1</td>
+<td>图 01</td>
+</tr>
+<tr class="odd">
+<td>S03</td>
+<td><code>/plan/new</code></td>
+<td>新建计划输入</td>
+<td>R1</td>
+<td>图 02</td>
+</tr>
+<tr class="even">
+<td>S04</td>
+<td><code>/plan/generating</code></td>
+<td>生成进度与错误恢复</td>
+<td>R1</td>
+<td>图 03</td>
+</tr>
+<tr class="odd">
+<td>S05</td>
+<td><code>/plan/:id</code></td>
+<td>行程图时间轴与地图</td>
+<td>R1</td>
+<td>图 04</td>
+</tr>
+<tr class="even">
+<td>S06</td>
+<td><code>/plan/:id/node/:nodeId</code></td>
+<td>节点详情与候选替换</td>
+<td>R1</td>
+<td>图 05</td>
+</tr>
+<tr class="odd">
+<td>S07</td>
+<td><code>/plan/:id/diff/:draftId</code></td>
+<td>修改差异预览</td>
+<td>R1</td>
+<td>图 06</td>
+</tr>
+<tr class="even">
+<td>S08</td>
+<td><code>/assistant</code></td>
+<td>小野 AI 旅途助手</td>
+<td>R1</td>
+<td>图 07</td>
+</tr>
+<tr class="odd">
+<td>S09</td>
+<td><code>/journey/:id/today</code></td>
+<td>出发当天模式</td>
+<td>R1</td>
+<td>图 08</td>
+</tr>
+<tr class="even">
+<td>S10</td>
+<td><code>/place/:id</code></td>
+<td>地点详情与留言</td>
+<td>R2</td>
+<td>图 09</td>
+</tr>
+<tr class="odd">
+<td>S11</td>
+<td><code>/place/:id/camera</code></td>
+<td>实景相机与地点内容</td>
+<td>R2</td>
+<td>图 10</td>
+</tr>
+<tr class="even">
+<td>S12</td>
+<td><code>/offers</code></td>
+<td>酒店景点影院团购</td>
+<td>R2</td>
+<td>图 11</td>
+</tr>
+<tr class="odd">
+<td>S13</td>
+<td><code>/community</code></td>
+<td>社区动态与发布</td>
+<td>R2</td>
+<td>图 12</td>
+</tr>
+<tr class="even">
+<td>S14</td>
+<td><code>/footprints</code></td>
+<td>足迹与旅行日记</td>
+<td>R2</td>
+<td>设计图共用图 12 卡片样式</td>
+</tr>
+<tr class="odd">
+<td>S15</td>
+<td><code>/profile</code></td>
+<td>我的、偏好、隐私与通知</td>
+<td>R1</td>
+<td>组件规范</td>
+</tr>
+<tr class="even">
+<td>S16</td>
+<td><code>/admin</code></td>
+<td>运营审核后台 Web</td>
+<td>R2</td>
+<td>功能规格，不属于手机界面</td>
+</tr>
+<tr class="odd">
+<td>S17</td>
+<td><code>/plan/:id/map</code></td>
+<td>跨多天地图总览</td>
+<td>R1</td>
+<td>地图交互稿图 13</td>
+</tr>
+<tr class="even">
+<td>S18</td>
+<td><code>/plan/:id/day/:dayId</code></td>
+<td>单日地图与时间轴</td>
+<td>R1</td>
+<td>地图交互稿图 14</td>
+</tr>
+<tr class="odd">
+<td>S19</td>
+<td><code>/plan/:id/calendar</code></td>
+<td>多日概览日历</td>
+<td>R1</td>
+<td>地图交互稿图 15</td>
+</tr>
+<tr class="even">
+<td>S20</td>
+<td><code>/plan/:id/expenses</code></td>
+<td>预算、票据与行前清单</td>
+<td>R1/R2</td>
+<td>地图交互稿图 16</td>
+</tr>
+<tr class="odd">
+<td>S21</td>
+<td><code>/booking/transport</code></td>
+<td>机票与火车票搜索比较</td>
+<td>R1/R2</td>
+<td>预订稿图 17</td>
+</tr>
+<tr class="even">
+<td>S22</td>
+<td><code>/booking/flight/:offerId</code></td>
+<td>航班与票价详情</td>
+<td>R2</td>
+<td>预订稿图 18B；火车票变体图 18</td>
+</tr>
+<tr class="odd">
+<td>S23</td>
+<td><code>/booking/hotels</code></td>
+<td>酒店列表与地图筛选</td>
+<td>R2</td>
+<td>预订稿图 19</td>
+</tr>
+<tr class="even">
+<td>S24</td>
+<td><code>/booking/hotel/:id</code></td>
+<td>酒店详情与房型</td>
+<td>R2</td>
+<td>预订稿图 20</td>
+</tr>
+<tr class="odd">
+<td>S25</td>
+<td><code>/booking/checkout</code></td>
+<td>乘客/住客信息与订单确认</td>
+<td>R2</td>
+<td>预订稿图 21</td>
+</tr>
+<tr class="even">
+<td>S26</td>
+<td><code>/orders</code></td>
+<td>订单状态、售后与行程关联</td>
+<td>R2</td>
+<td>预订稿图 22</td>
+</tr>
+<tr class="odd">
+<td>S27</td>
+<td><code>/orders/:id/service</code></td>
+<td>退改与供应商客服</td>
+<td>R2</td>
+<td>图 22 内次级状态</td>
+</tr>
+</tbody>
+</table>
+<h3 id="41-功能模块覆盖矩阵">4.1 功能模块覆盖矩阵</h3>
+<table>
+<thead>
+<tr class="header">
+<th>模块</th>
+<th>用户看得见的功能</th>
+<th>默认优先级</th>
+<th>核心页面</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>发现与收藏</td>
+<td>目的地搜索、周末玩法、地点收藏、雨天/室内筛选、社区灵感</td>
+<td>R1 基础，R2 内容</td>
+<td>S02 S10 S13</td>
+</tr>
+<tr class="even">
+<td>多日规划</td>
+<td>逐时生成、跨城交通、每日酒店、餐饮与自由时间、多个候选方案</td>
+<td>R1</td>
+<td>S03 S04 S05 S17 S19</td>
+</tr>
+<tr class="odd">
+<td>可编辑地图</td>
+<td>全部日期/每日图层、路线点与编号、地图/列表联动、点选替换、加点与重排预览</td>
+<td>R1 必须</td>
+<td>S05 S06 S07 S17 S18</td>
+</tr>
+<tr class="even">
+<td>小野助手</td>
+<td>行程问答、解释来源、自然语言改图、延误/雨天备选、旅途总结草稿</td>
+<td>R1 核心，R2 增强</td>
+<td>S08 S09 S11</td>
+</tr>
+<tr class="odd">
+<td>机票与火车票</td>
+<td>往返/单程查询、筛选比价、班次/票价详情、乘客、验价、订单与退改</td>
+<td>R1 mock，R2 真实接入</td>
+<td>S21 S22 S25 S26 S27</td>
+</tr>
+<tr class="even">
+<td>酒店与团购</td>
+<td>地图看酒店、房型与取消规则、景点/餐饮/影院商品、下单与售后入口</td>
+<td>R1 mock，R2 真实接入</td>
+<td>S12 S23 S24 S25 S26</td>
+</tr>
+<tr class="odd">
+<td>出发工具</td>
+<td>下一站导航、提醒、离线行程快照、证件清单、电子票据、异常重排</td>
+<td>R1 基础，R2 扩展</td>
+<td>S09 S20 S26</td>
+</tr>
+<tr class="even">
+<td>预算与同行</td>
+<td>每日分类预算、真实支出记录、只读分享、同行受邀查看；分账与投票后续</td>
+<td>R1 预算，R2 同行，R3 分账</td>
+<td>S19 S20</td>
+</tr>
+<tr class="odd">
+<td>地点实景</td>
+<td>主动相机、地点确认、地点留言、附近推荐、拍照收藏</td>
+<td>R2</td>
+<td>S10 S11</td>
+</tr>
+<tr class="even">
+<td>足迹与社区</td>
+<td>到访确认、相册、游记、动态、评论、收藏、举报与审核</td>
+<td>R2</td>
+<td>S13 S14 S16</td>
+</tr>
+</tbody>
+</table>
+<p><strong>方案对比：</strong>
+生成时可给“省钱/少折腾/深度玩”三个可行候选，三套方案独立版本并列对比总费用、交通耗时、步行量和必去点覆盖；选择一套后才成为正式图。R1
+至少提供主方案与一个备选，候选数不足时说明原因。<strong>同行权限：</strong>
+R1 分享只读链接可撤销；R2 邀请同行建议修改但只由行程所有者确认；R3
+再做多人投票和费用分摊，避免首发并发编辑失控。</p>
+<h2 id="5-逐页功能与交互设计">5 逐页功能与交互设计</h2>
+<h3 id="s01-欢迎与账号">S01 欢迎与账号</h3>
+<p><strong>布局：</strong>
+上部品牌标志与“想去哪，先向野看看”，中部两张示例行程卡，下部“开始规划”“登录并同步”及隐私条款。首次规划允许游客创建本机草稿；保存至云端、跨设备同步、发布、评论或下单前要求账号。不要把位置或相机许可放在首屏。</p>
+<p><strong>逻辑：</strong> 用户点“开始规划”进入
+S03；点“登录”使用手机号验证码或团队选定的合规方案。验证码倒计时、频控和错误信息清晰。游客转账号后询问是否导入本地草稿，冲突按最近更新时间提示选择。退出登录后清理敏感缓存，保留经用户确认的公开数据。</p>
+<p><strong>状态/API/验收：</strong>
+无网允许游客查看本地草稿；登录失败保留表单；<code>POST /auth/send-code</code>
+与 <code>POST /auth/verify</code>
+服务端限流。拒绝服务条款不能提交注册。权限授权只在对应功能触发时出现。</p>
+<h3 id="s02-发现首页-图-01">S02 发现首页 图 01</h3>
+<p><strong>布局：</strong>
+顶部“向野”字标与当前位置可编辑入口；大面积绿色欢迎卡“这周末，去哪？”加小野输入框；横向玩法筛选“近郊/自然/城市/雨天”；下方目的地卡与“跟着行程走”社区精选，底部导航固定。</p>
+<p><strong>操作：</strong> 点搜索进入地点搜索；点灵感卡进入 S03
+且预填目的地/主题；点社区卡进入 S13；点小野输入框进入 S08
+并保留输入。推荐理由需显示出发地与偏好依据，可关闭个性化推荐。无定位时用用户选择的城市；无推荐时展示编辑精选而非空白。</p>
+<p><strong>数据/API/验收：</strong>
+<code>GET /discover?city_id&amp;filters</code>
+返回卡片、来源与推广标识；营销卡与自然推荐明显区分。滚动位置返回时保留，图片加载失败显示色块和地点名。</p>
+<h3 id="s03-新建计划-图-02">S03 新建计划 图 02</h3>
+<p><strong>布局：</strong> 顶部进度“1/2
+基本信息”；出发城市/具体地点、目的地、日期范围、人数、总预算四个核心输入突出；折叠区域是交通偏好、节奏、必去点、酒店上限、步行限制；底部固定生成按钮和预算说明。</p>
+<p><strong>操作：</strong>
+城市搜索需消歧，日期不能早于当天，结束不早于开始；预算可以切“整单/每人”，默认整单且含往返。选择具体站点不是必填，系统不得把城市中心点当个人起点。提交前展示摘要；相同幂等键不重复创建。入口可从发现卡预填但需用户确认。</p>
+<p><strong>状态/API/验收：</strong>
+<code>POST /v1/trips/generate</code>；字段验证在客户端和服务端双重执行。预算过低允许提交探索，但先展示预算可能不足提示；没有目的地、时间或预算不能提交。键盘弹出时固定按钮不遮挡字段。</p>
+<h3 id="s04-生成进度-图-03">S04 生成进度 图 03</h3>
+<p><strong>布局：</strong>
+路线点动画，四个步骤“查找地点/安排交通/匹配住宿/检查预算”，显示当前可确认的数据量，不伪造百分比。支持退出后回到计划列表。</p>
+<p><strong>操作：</strong> <code>GET /v1/jobs/:id</code>
+轮询或推送；超时转后台任务并可通知用户。无授权班次接口时显示“城际交通待查询”，任务仍可产出带未知节点的计划；关键约束无法满足时显示冲突和修改输入按钮。取消只取消当前生成任务，不删除用户输入。</p>
+<p><strong>验收：</strong> 模型返回非法 JSON、地图超时、供应商无票、App
+退到后台后恢复都有稳定结果，不出现无限转圈或重复付费调用。</p>
+<h3 id="s05-行程图-图-04">S05 行程图 图 04</h3>
+<p><strong>布局：</strong> 标题“杭州 3 天 2
+晚”，顶部日期标签与预算摘要；默认<strong>地图+时间轴分屏</strong>，地图约占
+55% 可拖动区域，底部节点列表约占 45% 且可上拉全屏。顶部“全部/第 1 天/第
+2 天/第 3
+天”横向日期条；“地图/列表/日历”三态切换。地图显示按天着色且带序号的节点与路径，时间轴显示时刻、地点和价格状态；交通边显示方式、耗时和费用。右上有图层、适配全程范围、定位入口；底部“小野帮我调整”。完整交互见
+S17/S18 与地图交互稿。</p>
+<p><strong>规则：</strong>
+节点类型为起点、城际交通、换乘、游玩、餐饮、酒店、自由时间、终点；边是显式交通段。点节点打开
+S06，长按可锁定或标完成，移动节点需进入编辑而非直接拖坏时间约束。地图标记与时间轴共用
+<code>node_id</code>，任意一侧选择都滚动/聚焦另一侧。图上已订有锁标，冲突有醒目文字。多日地图的颜色按天区分，形状按类型区分，不能只靠颜色；酒店节点跨日相连。</p>
+<p><strong>状态/API/验收：</strong>
+<code>GET /v1/trips/:id?version=n</code>；切天只过滤本地现有图，不重新生成，离线可读最近快照但报价标过期。每个游玩或酒店节点能追踪地点/供应商来源；每条边能看到
+A→B
+的方式、耗时、估算/报价与查询时间。超过预算必须给出缺口。跨城长段路线有“交通段”样式与起终点，不把两城画成伪造的地面直线路径。</p>
+<h3 id="s06-节点详情与替换-图-05">S06 节点详情与替换 图 05</h3>
+<p><strong>布局：</strong> 从底部弹出占屏约 80%
+的面板，上方节点名、时段、地点、费用与来源，中段 A→B
+交通及开放时间，下方固定“替换这个点”“改时间”“锁定”“导航”。点替换进入候选列表，候选卡突出时间窗、预算差、到达便利和营业状态。</p>
+<p><strong>操作：</strong>
+先选替换类型（同类/室内/附近/手动搜索）；服务端查 POI
+和相邻边；默认展示最多 3–5 个可行候选。选择候选仅生成草稿，跳
+S07；锁定不触发整图重排。已订商品节点先显示处理提示，不直接删除真实订单。</p>
+<p><strong>状态/API/验收：</strong>
+<code>GET /v1/trips/:id/nodes/:nodeId/candidates</code>，<code>POST /edit/preview</code>。候选为空时给修改时间/预算/半径入口；供应商失败时展示来源失败范围。节点
+ID 在替换后按修订规则保持引用连续，历史版本可找回原节点。</p>
+<h3 id="s07-差异预览-图-06">S07 差异预览 图 06</h3>
+<p><strong>布局：</strong>
+标题“确认这次调整”，上方左右/上下呈现旧方案与新方案，红/绿标签标节点删增、时刻变化、交通变化；总费用区间和预算余量固定可见；下方“保存为新版本”与“继续修改”。</p>
+<p><strong>操作：</strong> <code>draft_revision</code>
+不写入正式行程；用户确认后用 <code>If-Match</code>
+提交，保存返回新版本，支持撤销。跨日或已订节点影响需单独列出并要求二次确认。用户退出该页可找回草稿，但超过有效期需重新刷新报价。</p>
+<p><strong>验收：</strong> 取消不改原图；两设备同时编辑旧版本返回
+<code>VERSION_CONFLICT</code>
+并提供合并可行内容；点击保存多次只有一个版本。聊天文案与实际 patch
+一致。</p>
+<h3 id="s08-ai-旅途助手小野-图-07">S08 AI 旅途助手小野 图 07</h3>
+<p><strong>布局：</strong>
+顶部显示当前绑定行程及“正在使用的资料”，中部聊天记录，底部输入框和快捷指令“安排雨天备选”“预算再省
+200”“下一站怎么走”。小野回复卡分为“我的建议、依据、会改动的地方”；修改结果以
+S07 差异卡嵌入对话，不仅是一段文字。</p>
+<p><strong>能力：</strong>
+规划前补充缺项，规划后解释路线与费用，在途提醒下一站及应变，地点现场答疑，商品条款对比，旅行结束生成私密游记草稿。每个回答引用当前版本、数据时间和供应商；不确定时明确“我还不知道”。只有只读查询和创建改图草稿的工具权，不能直接付费、取消订单、发布公开帖或绕过锁定节点。</p>
+<p><strong>典型交互：</strong> 用户说“高铁晚点 90
+分钟，今晚酒店别动，下午只逛西湖”。小野先问延误来自实时数据还是用户告知；基于新的抵达时刻重排同日节点，锁定酒店，算出交通与费用差，展示差异卡。用户点确认才保存；若无可行方案则说明冲突并给替代。</p>
+<p><strong>状态/API/验收：</strong>
+<code>POST /v1/assistant/messages</code>
+接流式回复，工具执行日志服务端记录。拒绝注入、错误资料、不足权限、超时与无网络时给可操作的恢复提示。用户能关闭位置上下文、删除对话和稳定偏好。小野可解释“第二天”“今晚”“这个点”的指代，歧义时选择目标。</p>
+<h3 id="s09-出发当天-图-08">S09 出发当天 图 08</h3>
+<p><strong>布局：</strong> 顶部当前天气与“今日 3/7
+节点”，大卡显示下一站、最晚离开时间、路线/费用、导航按钮；下方为今天时间轴、票据与酒店入住提醒。天气只能来自接入的服务，没有则不显示假数据。</p>
+<p><strong>操作：</strong>
+到达由用户手动确认或主动定位提示后确认；延误提醒进入小野的局部调整；导航使用地图提供商的合法唤起能力。已完成节点不可被
+AI 自动改写。离线时可读计划和导航文字但不保证地图实时路线。</p>
+<p><strong>状态/API/验收：</strong>
+未开始旅行显示“选择一趟行程”；提醒需要单独通知权限，可选择静默时段。无真实延误源时不说“已晚点”，只提示用户核对。若预计赶不上下一站，给当前已核验/估算依据。</p>
+<h3 id="s10-地点详情-图-09">S10 地点详情 图 09</h3>
+<p><strong>布局：</strong>
+地点封面、名称/地址、开放时间及数据时间、特色摘要；入口“加入行程”“问小野”“打开实景”；下方标签“攻略/留言/商品”。用户留言显示可见范围与审核标识，团购卡有供应商和条款摘要。</p>
+<p><strong>操作：</strong>
+加入行程需选日期时间并生成编辑草稿，不能直接塞进冲突位置。点赞、收藏、评论、举报都有反馈；地点重名时地址与地图坐标必须可核对。地点关闭/停业显示警示。</p>
+<p><strong>状态/API/验收：</strong>
+<code>GET /v1/places/:id</code>、<code>GET /posts</code>、<code>GET /offers</code>。媒体加载失败保留文案和操作，审核中的留言只作者可见，审核拒绝可申诉。</p>
+<h3 id="s11-向野实景相机-图-10">S11 向野实景相机 图 10</h3>
+<p><strong>布局：</strong>
+全屏相机预览，顶部“附近地点：西湖断桥”与切换地点，下方最多 2–3
+张地点级浮层卡，底部“拍照留言”“问小野”“返回”。卡片固定在安全视觉区域，不挡道路/台阶；实景模式有明显退出按钮。</p>
+<p><strong>实现层级：</strong> R2 使用用户主动打开相机 + 粗定位 + POI
+候选 +
+用户确认的地点级屏幕覆盖层；OCR/图像识别只用于地点候选，不把结果当确证。R3
+才试点 ARKit/ARCore
+地理锚点，启动时检查设备与当地可用性，失败退回地点卡。ARKit
+地理追踪依赖位置可用性检查，ARCore
+地理能力依赖设备和地图覆盖。[R3][R4]</p>
+<p><strong>隐私与验收：</strong>
+相机帧默认只在本机处理，用户按发布才上传所选照片；剔除
+EXIF；精度差要求手选地点；拒绝相机许可仍能在 S10
+读留言。默认仅自己可见，公开发布有明确选择，不展示精确到分钟的真实到访时间。</p>
+<h3 id="s12-酒店景点影院团购-图-11">S12 酒店景点影院团购 图 11</h3>
+<p><strong>布局：</strong>
+顶部筛选“酒店/景点/餐饮/影院”，商品卡显示名称、距离行程节点、适用日期、权益、含税/附加费、价格与供应商；底部保留预算余量。当前计划内酒店页优先显示能在当天交通可达的房源。</p>
+<p><strong>操作：</strong>
+筛选日期、人数、退款政策与预算；点商品看完整条款，点购买前重新验价；R2
+默认跳合作方完成支付。无订单回流时只显示“已跳转”，不能显示“已预订”。团购需有授权商家和合法商品接口，不抓取页面。推广标识与推荐理由分别展示。</p>
+<p><strong>状态/API/验收：</strong>
+<code>GET /v1/offers</code>、<code>POST /v1/quotes/revalidate</code>、<code>POST /v1/offer-clicks</code>。价格变更展示新旧差，过期/售罄禁用购买，退款规则不清楚则不得引导下单。酒店每晚与房间数的总价需可核对。</p>
+<h3 id="s13-社区动态-图-12">S13 社区动态 图 12</h3>
+<p><strong>布局：</strong>
+“关注/发现/附近”标签；动态卡含作者、关联地点、内容、图片、体验日期、收藏/评论/复制路线；底部发布入口。附近标签第一次打开时按需申请定位，也允许选城市。</p>
+<p><strong>发布：</strong>
+内容支持图文、地点、旅行路线摘要；可见性“仅自己/同行/公开”，默认仅自己；发布前脱敏酒店房号、订单号与实时轨迹。公开路线被复制时成为新用户草稿，POI
+营业与价格重新查询。用户可删除、屏蔽、举报，审核后台可下架与处理申诉。</p>
+<p><strong>状态/API/验收：</strong>
+<code>GET /v1/feed</code>、<code>POST /v1/posts</code>、<code>POST /v1/posts/:id/reports</code>。审核中不可出现在公共流；删除后列表与地点页同步消失。AI
+生成或修改的内容按适用规定标识。[R5][R6]</p>
+<h3 id="s14-足迹-s15-我的-s16-运营后台">S14 足迹 S15 我的 S16
+运营后台</h3>
+<p><strong>足迹：</strong>
+私密旅行列表、已到达节点地图、照片选择、按日期生成游记草稿、一键编辑/发布；不自动把计划当成真实到访，只有用户确认或授权证据的节点可写入“已去过”。无照片时用文字时间线。单趟旅行可导出非敏感分享卡。</p>
+<p><strong>我的：</strong>
+账号与设备、旅行偏好、通知、已跳转订单入口、供应商售后入口、数据导出/删除、隐私许可、黑名单与客服。商品订单状态仅供应商回流时显示。游客可查看本地草稿和清除数据。</p>
+<p><strong>运营后台：</strong> 登录角色
+<code>moderator/operator/admin</code>，包含 UGC
+审核队列、举报与申诉、地点纠错、商品屏蔽、供应商故障与数据新鲜度、用户封禁、审计日志；所有下架动作写操作人、原因和时间。后台是独立
+Web 控制台，权限与 App 用户 API 隔离。</p>
+<h3 id="s17-跨多天地图总览-图-13">S17 跨多天地图总览 图 13</h3>
+<p><strong>布局：</strong>
+标题与预算摘要下方是横向日期条“全部/周五/周六/周日”；全屏地图显示每天不同颜色的节点序号、日间线路与酒店月亮标记，左下图例解释天数和交通方式，底部抽屉列出每天“起点—重点地点—住宿—费用区间”。长途飞机/高铁作为单独的跨城边，缩放到整趟范围时只显示起终城市与交通标签，不伪造路面线路。</p>
+<p><strong>交互：</strong>
+选“全部”适配所有节点视野，点一天只显示该日路径并聚焦范围；点标记打开节点卡并高亮时间轴对应项；点酒店显示连续入住晚数；地图拖动/缩放不改变当前日期筛选。两个地点过近时聚合为“3
+个点”，点击展开。定位按钮只在用户授权后显示当前位置；无授权仍能看行程。点“列表”进入
+S19，点“详细路线”进入 S18。</p>
+<p><strong>状态/API/验收：</strong> 前端利用已加载
+<code>TripGraph</code> 绘图，地理底图与路线几何来自有授权地图
+SDK。城市间没有路线 geometry
+时用交通图标与文字衔接。离线只显示许可范围内可缓存内容和上次快照，明确“地图不可用”时退回列表。缩放、切天、选点无需调用生成
+AI。</p>
+<h3 id="s18-单日地图与时间轴-图-14">S18 单日地图与时间轴 图 14</h3>
+<p><strong>布局：</strong> 地图上 1、2、3…
+对应时间轴中的节点编号；线段按步行、公交/地铁、驾车等方式用线型区分，城际边用交通卡而非不实画线。屏幕下部是可上拉的时间轴，显示到点、离点、交通耗时、总步行量、当日已花/待花预算。酒店与次日第一个节点有“过夜连接”。</p>
+<p><strong>交互：</strong>
+点地图节点、点时间轴节点、地图滑动选点相互同步。点弹出的底卡有“详情/替换/锁定/导航/加到收藏”；点替换进入
+S06，返回后保留地图视角和选中节点。点边展开 A→B
+具体换乘、费用和来源；按交通方式过滤时仅隐藏地图层，不改变计划。可用“加入一个点”在两个节点间插入候选，先预览冲突再保存。</p>
+<p><strong>验收：</strong>
+替换后节点、前后两条边、当日费用、跨天住宿冲突同步更新；图和时间轴不会显示不同版本。多日图最多渲染当前视野需要的标记，点密集地区可用聚合。无几何信息时用列表直达导航，不画虚构道路。</p>
+<h3 id="s19-多日概览日历-图-15">S19 多日概览日历 图 15</h3>
+<p><strong>布局：</strong> 每日卡显示城市/区域、3
+个主要节点、酒店、活动时长、交通时长、步行量、预算区间和天气（有数据时）；月历只用于日期切换，详细计划用纵向日卡。跨城市转移日显示“交通日”分隔卡。可快速看哪天太满、哪天留空。</p>
+<p><strong>交互：</strong> 点日卡进入
+S18；点“松一点”让小野只调整当天；长按顺序手柄可请求重排，但已订节点保持锁定，须生成差异预览。酒店入住跨两天，在两个日卡各有入住/退房提示，不重复计算房费。</p>
+<h3 id="s20-预算票据与行前清单-图-16">S20 预算票据与行前清单 图 16</h3>
+<p><strong>布局：</strong>
+顶部预算分配图（交通、住宿、餐饮、门票、预留），下方逐日花费表、已订/待订分组、电子票据入口和行前清单。每一笔显示已支付、已核验未支付、估算或待查询，不把预算估算当订单支付。</p>
+<p><strong>交互：</strong>
+用户可手动记账（现金/转账/其他，不保存完整金融账户）、按人数分摊查看；订单从有授权的供应商回流时自动关联到对应节点与日期，用户可手动关联外部票据附件。行前清单可勾选证件、衣物、酒店入住信息和出发提醒。R2
+多人共享预算只分享总额与用户明确授权的记录，默认不共享个人支出明细。</p>
+<h3 id="s21-机票火车票搜索比较-图-17">S21 机票火车票搜索比较 图 17</h3>
+<p><strong>入口：</strong>
+行程图的“城际交通待查询”、首页“机票/火车票”、小野推荐卡。沿用已输入城市、日期、人数，用户可改站机场和出发时间窗。上方“机票/火车票/全部”标签，结果按总耗时与总价比较，并计入到机场/车站及抵达后到酒店的接驳时间和费用。返程与去程分开选择，先选去程再选返程。</p>
+<p><strong>列表：</strong>
+每条结果显示出发/到达当地时刻、站机场、航班号或车次（仅供应商数据）、总耗时、直达/中转、舱位或席别、行李/退改摘要、价格适用人数与查询时间。筛选出发时段、总耗时、中转、航空公司/车种、行李、退改、总价；排序综合推荐/时间/价格。无库存或无授权结果时明确“待查询”，保留外部合作方查询入口，不显示编造的具体班次。</p>
+<h3 id="s22-航班详情-图-18">S22 航班详情 图 18</h3>
+<p><strong>详情：</strong>
+去返程航段、机场与航站楼、转机时长、经停、承运方、舱位、行李额、改退规则、保险等附加项单列且默认不勾选。价格拆分票价、税费、服务费、附加产品、人数合计；非实时值醒目标明。选票价方案后进入
+S25，离开页面超过报价有效期需刷新。</p>
+<p><strong>火车票变体：</strong> 与 S22
+共享详情容器，改为车站、车次、席别、余票状态、取票/乘车证件要求、退改规则；无席别时不能选中。车次和航空信息不由
+LLM
+生成。若供应商只支持跳转，详情页显示“前往合作方预订”，不收集乘客证件和支付信息。</p>
+<h3 id="s23-酒店列表与地图筛选-图-19">S23 酒店列表与地图筛选 图 19</h3>
+<p><strong>入口：</strong>
+行程图过夜节点、首页酒店快捷入口、地点页推荐。日期默认按该过夜段入住/退房，人数房间数与行程同步；列表和地图一键切换。地图显示酒店价格标记和当前行程节点，筛选距离地铁/景点、每晚含税价、免费取消、早餐、房型、评分、无障碍和可入住时间；地图价标点击对应列表卡。</p>
+<p><strong>规则：</strong>
+价格按完整房晚与人数拆解，标出税费/押金和付款方式。夜晚地点变更时重新计算前后交通与入住时间；酒店候选不应只按最低价推荐，需考虑总路程、入住窗口和预算。没有供应商许可的数据不得展示具体房型库存。</p>
+<h3 id="s24-酒店详情与房型-图-20">S24 酒店详情与房型 图 20</h3>
+<p><strong>详情：</strong>
+图片/地图位置、距行程关键点、入住退房时间、设施、政策、近期评价来源；下方房型与套餐卡逐一展示床型、人数、早餐、取消时间、是否预付、完整总价和供应商。用户点房型“加入当前行程”先生成差异草稿；点“预订”进入
+S25 或授权合作方页面。政策展开可读，不用隐藏在一行小字里。</p>
+<h3 id="s25-订单确认与支付边界-图-21">S25 订单确认与支付边界 图 21</h3>
+<p><strong>原生交易路径仅在合作接口允许时启用：</strong>
+乘机人/乘车人或住客信息按商品最小要求收集，支持复用但不预填他人的证件；联系人、通知方式、条款、总价明细、改退政策逐项确认。点击付款前必须二次验价和库存；价格变化重新展示差额及原因。支付使用合规合作方/支付组件，向野服务端不保存完整银行卡信息。下单与支付调用带幂等键，超时先查单，不能盲目重试造成重复订单。</p>
+<p><strong>合作方跳转路径：</strong>
+不显示本地“付款成功”。跳转前展示供应商名称、商品摘要与需要在合作方完成预订的提示；返回后有订单回流才确认预订成功，没有回流显示“已跳转，去合作方查看”。若要把成功订单加入行程，用实际确认信息替换原估算节点并再次校验图。</p>
+<h3 id="s26-订单中心与-s27-退改-图-22">S26 订单中心与 S27 退改 图
+22</h3>
+<p><strong>状态：</strong>
+待支付/支付处理中/已确认/出票中/出票成功/已取消/退款中/退款完成/失败/状态未知，状态只来自有授权订单接口。订单卡有供应商、实际乘客或房间数的脱敏摘要、日期、最终金额、关联行程节点、电子凭证与客服入口。异常支付先查订单状态；状态未知提示等待和联系供应商。</p>
+<p><strong>售后：</strong> 根据合同和接口能力决定 App
+内申请或跳原供应商。用户发起退改前显示适用规则、可能费用、受影响的行程节点与替代交通/住宿。订单退改成功后行程图节点更新为冲突或待替换，由小野提出重排草稿，不能自动改订其他商品。供应商无能力时仅提供订单查询与售后入口。</p>
+<h2 id="6-行程引擎详细设计">6 行程引擎详细设计</h2>
+<h3 id="61-输入和结果">6.1 输入和结果</h3>
+<p>必填
+<code>origin_city_id,destination_city_id,start_date,end_date,party_size,budget_fen,budget_scope</code>；可选
+<code>origin_place_id,transport_preference,hotel_room_count,pacing,walking_limit_m,must_visit_place_ids,avoid_place_ids,accessibility,meal_preferences</code>。预算范围注明往返、每人/整单；住宿房间数默认根据人数建议但由用户确认。结果为
+<code>TripGraph</code>，含节点 <code>TripNode[]</code>、有向边
+<code>TripEdge[]</code>、预算明细、数据证据、警告和版本。</p>
+<h3 id="62-规划步骤">6.2 规划步骤</h3>
+<ol type="1">
+<li>规范城市/地点/日期/时区，处理同名 POI，进行基本约束检查。</li>
+<li>查询授权地图
+POI、路网、市内交通、营业信息；若有授权供应商，查询城际班次、酒店与活动报价。</li>
+<li>固定出发、抵达、过夜、返程等硬节点；为换乘和交通安检加入可配置缓冲。</li>
+<li>在营业时间、位置、行程节奏、预算、交通可达性下生成候选图并评分。</li>
+<li>校验节点时序、边的通行时间、酒店夜数、硬预算、已锁节点与数据真实性。</li>
+<li>LLM 仅解释已生成的结构化图，按 schema
+输出理由；不能发明班次或报价。校验失败重算或返回可解释的不可行原因。</li>
+</ol>
+<p><strong>约束不变量：</strong>
+<code>start_at &lt; end_at</code>；边抵达+缓冲≤下一个节点开始；同一旅客节点不重叠；每过夜日有住宿或明确夜间交通；已订和已完成不可被自动更改；预算不足时先给可选放宽项；库存过期不能标已核验。建议预留
+10% 预算用于意外花费，用户可调整。</p>
+<h3 id="63-局部编辑算法">6.3 局部编辑算法</h3>
+<p>自然语言先转为
+<code>intent={scope,operation,constraints,protected_nodes}</code>，点节点编辑转为同一
+<code>PlanPatch</code>。求影响域：目标节点、入边、出边、同日后继节点；跨天冲突才扩大域。固定保护节点并重新求解影响域；重算成本及时间；写
+<code>DraftRevision</code>；前端展示差异；用户确认后以
+<code>base_version</code> 乐观锁事务提交。撤销是新的逆向
+revision，不删除审计历史。所有人工备注按节点稳定 ID 迁移。</p>
+<h3 id="64-图表示例">6.4 图表示例</h3>
+<pre class="mermaid"><code>flowchart TD
+  A[出发点] --&gt; B[出发站]
+  B --&gt; C[城际交通]
+  C --&gt; D[到达站]
+  D --&gt; E[游玩与餐饮]
+  E --&gt; F[酒店]
+  F --&gt; G[次日与返程]</code></pre>
+<p>边对象示例：“杭州东站 → 西湖”，方式“地铁 +
+步行”，出发/到达本地时间、需走 700 米、预计 34 分钟、费用
+¥4/人、来源“地图服务”、查询时间。价格与方式变动都能在 S07
+预览中比较。</p>
+<h3 id="65-多日地图数据与渲染规则">6.5 多日地图数据与渲染规则</h3>
+<p><code>TripDay</code> 包含
+<code>day_id, local_date, city_ids, node_ids, overnight_place_id, cost_summary, map_bounds</code>。每个节点存
+<code>day_id, sequence, canonical_place_id, coordinate_system, latitude, longitude, marker_type</code>；每条边存
+<code>from/to, mode, duration, cost_state, geometry_ref, geometry_status</code>。时间轴和地图只消费同一
+<code>TripGraphVersion</code>，不得维护两份独立可编辑列表。图层组件根据
+<code>day_id</code> 过滤，而不是为每一天重新请求生成。</p>
+<p><strong>可视化规则：</strong>
+全部日期选中时，按天分别着色，低缩放聚合相邻节点；选中某天后编号重置为当天
+1…N，并绘制该天经地图服务许可的实际路线
+geometry。步行实线、公交/地铁虚线、驾车双线；城际铁路/航班显示符号化“交通段”与城市端点，不把不可得的线路坐标画成真实轨迹。地图上永久可见图例和数据更新时间。酒店月亮标记可连接入住和次日退房；跨天边标时间与日期变化。夜间/多城计划自动适配跨日和时区。</p>
+<p><strong>交互契约：</strong> <code>select_node(id)</code> 同时更新地图
+halo、底卡和列表焦点；<code>select_day(day_id)</code>
+更新图层和视野并保留此日上次地图缩放；<code>replace_node</code>
+调用统一改图预览，成功后用新版本原子更新
+map/list/budget；<code>fit_bounds</code>
+要留足顶部日期条与底抽屉的安全边距。地图标记聚合后点聚合展开列表，不误触直接替换。无经纬度节点（自由时间/待定住宿）在列表显示“位置待定”，地图不造点。</p>
+<p><strong>出行时：</strong>
+只在用户授权后显示蓝色自身位置，位置点与规划标记视觉不同；地图离线可用性依地图供应商许可和
+SDK
+能力，不自行抓取瓦片。线路失效时保留标记和上次查询时间，边改“请重新查询”。用户拖动地图仅改变视角，不偷偷更改行程顺序。</p>
+<h2 id="7-小野-ai-助手的执行契约">7 小野 AI 助手的执行契约</h2>
+<p><strong>上下文：</strong>
+<code>trip_id</code>、当前版本、目的地时区、当前/下一节点、剩余预算、已订/锁定状态、用户主动授权的粗位置、已保存偏好。对话不能用陈旧版本执行写操作；临时对话上下文与长期偏好分开，长期偏好逐条可删除。</p>
+<p><strong>工具白名单：</strong> 只读
+<code>get_trip,get_node,search_place,get_route,get_quote,get_public_posts</code>；可写草稿
+<code>create_plan_patch,preview_revision,create_footprint_draft</code>。<code>commit_revision</code>
+由用户确认后通过客户端提交；支付、退票、公开发帖不对 LLM
+暴露。任何工具响应带 <code>source</code> 和
+<code>fetched_at</code>。外部评论、商家文案、网页都视为不可信数据，不能改变工具权限。</p>
+<p><strong>意图输出：</strong>
+<code>ANSWER</code>（直接回答）、<code>CLARIFY</code>（消歧）、<code>PLAN_PREVIEW</code>（改图草稿）、<code>NO_DATA</code>（说明缺口）、<code>HANDOFF</code>（跳供应商/客服）。答复模板自然简短：结论、依据/更新时间、下一步按钮。流式输出发生工具失败时，不先说“已经改好”；只有收到新版本后才说已保存。AI
+推荐的商品要注明推广关系；公开 AI 生成内容按适用规则标识。[R5]</p>
+<h2 id="8-数据模型api-与外部集成">8 数据模型、API 与外部集成</h2>
+<h3 id="81-数据实体">8.1 数据实体</h3>
+<table>
+<thead>
+<tr class="header">
+<th>表/聚合</th>
+<th>关键字段</th>
+<th>关系与索引</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>users</code></td>
+<td>id, auth_state, preferences, consent_version</td>
+<td>用户偏好和授权分开</td>
+</tr>
+<tr class="even">
+<td><code>trips</code></td>
+<td>id, owner_id, status, timezone, budget_fen, party_size,
+current_version</td>
+<td>owner + 更新时间索引</td>
+</tr>
+<tr class="odd">
+<td><code>trip_nodes</code></td>
+<td>id, trip_id, version, type, place_id, start_at, end_at, cost,
+source_state, locked, booked, completed</td>
+<td>trip + version + time 索引</td>
+</tr>
+<tr class="even">
+<td><code>trip_edges</code></td>
+<td>id, from_node_id, to_node_id, mode, duration_sec, cost,
+route_ref</td>
+<td>有向外键与连通校验</td>
+</tr>
+<tr class="odd">
+<td><code>trip_revisions</code></td>
+<td>id, trip_id, base_version, patch, author, created_at</td>
+<td>审计历史</td>
+</tr>
+<tr class="even">
+<td><code>trip_days</code></td>
+<td>id, trip_id, version, local_date, city_ids, overnight_node_id,
+cost_summary</td>
+<td>多日分组与跨日连接</td>
+</tr>
+<tr class="odd">
+<td><code>places</code></td>
+<td>id, provider_ids, name, address, lat, lng, opening_hours</td>
+<td>地理索引与同名消歧</td>
+</tr>
+<tr class="even">
+<td><code>quotes</code></td>
+<td>id, supplier, item_ref, amount_fen, currency, captured_at,
+expires_at, conditions</td>
+<td>有效期与供应商索引</td>
+</tr>
+<tr class="odd">
+<td><code>offers</code></td>
+<td>id, place_id, supplier, terms, stock_state, deep_link</td>
+<td>POI 与商品解耦</td>
+</tr>
+<tr class="even">
+<td><code>posts</code></td>
+<td>id, author_id, place_id, trip_id, visibility, moderation_state,
+media_refs</td>
+<td>发布/审核查询索引</td>
+</tr>
+<tr class="odd">
+<td><code>permissions</code></td>
+<td>user_id, trip_id, role, expires_at</td>
+<td>分享与同行授权</td>
+</tr>
+<tr class="even">
+<td><code>booking_searches</code></td>
+<td>id, trip_id, product_type, query, created_at</td>
+<td>搜索上下文与币种人数</td>
+</tr>
+<tr class="odd">
+<td><code>supplier_orders</code></td>
+<td>id, user_id, trip_id, node_id, supplier, external_ref, status,
+price_fen, status_at</td>
+<td>只存授权回流的最小状态</td>
+</tr>
+<tr class="even">
+<td><code>order_events</code></td>
+<td>id, order_id, provider_event_id, type, payload_ref, occurred_at</td>
+<td>幂等事件与状态审计</td>
+</tr>
+<tr class="odd">
+<td><code>expenses</code></td>
+<td>id, trip_id, day_id, category, amount_fen, paid_state, source,
+visibility</td>
+<td>预算与个人开支区分</td>
+</tr>
+</tbody>
+</table>
+<p>坐标明确存 <code>coordinate_system</code>，适配器负责 WGS84/GCJ02
+转换，不混算。金额用整数分；时间存 UTC 与 IANA
+时区，按目的地本地时间显示。供应商原始响应只保留许可范围内必要字段与短期缓存。订单由供应商自有系统负责，向野保存跳转日志和可授权回流的最小订单状态。</p>
+<h3 id="82-关键接口">8.2 关键接口</h3>
+<table>
+<thead>
+<tr class="header">
+<th>方法和路径</th>
+<th>用途</th>
+<th>主要输入/输出</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>POST /v1/trips/generate</code></td>
+<td>异步生成</td>
+<td>输入约束 → <code>job_id</code>，幂等键</td>
+</tr>
+<tr class="even">
+<td><code>GET /v1/jobs/:id</code></td>
+<td>生成进度</td>
+<td>step/status/warnings/trip_id</td>
+</tr>
+<tr class="odd">
+<td><code>GET /v1/trips/:id</code></td>
+<td>当前/历史图</td>
+<td><code>?version=n</code> → nodes/edges/cost/source</td>
+</tr>
+<tr class="even">
+<td><code>GET /v1/trips/:id/nodes/:nodeId/candidates</code></td>
+<td>节点候选</td>
+<td>mode/filters → candidates</td>
+</tr>
+<tr class="odd">
+<td><code>POST /v1/trips/:id/edit/preview</code></td>
+<td>自然语言或点选改图</td>
+<td>text 或 patch + base_version → draft_id/diff</td>
+</tr>
+<tr class="even">
+<td><code>POST /v1/trips/:id/revisions</code></td>
+<td>确认草稿</td>
+<td>draft_id + If-Match → new_version</td>
+</tr>
+<tr class="odd">
+<td><code>POST /v1/assistant/messages</code></td>
+<td>小野对话</td>
+<td>trip_id/version/text → stream + typed card</td>
+</tr>
+<tr class="even">
+<td><code>GET /v1/places/:id</code></td>
+<td>地点详情</td>
+<td>POI、营业、帖子、商品引用</td>
+</tr>
+<tr class="odd">
+<td><code>GET /v1/offers</code></td>
+<td>商品</td>
+<td>category/date/party/place → authorized offers</td>
+</tr>
+<tr class="even">
+<td><code>POST /v1/quotes/revalidate</code></td>
+<td>购买前验价</td>
+<td>quote_id → price/stock/terms</td>
+</tr>
+<tr class="odd">
+<td><code>POST /v1/posts</code></td>
+<td>发布内容</td>
+<td>text/media/place/visibility → moderation_state</td>
+</tr>
+<tr class="even">
+<td><code>POST /v1/posts/:id/reports</code></td>
+<td>举报</td>
+<td>reason → report_id</td>
+</tr>
+<tr class="odd">
+<td><code>GET /v1/trips/:id/map</code></td>
+<td>多日地图数据</td>
+<td>day_id/all + version → markers/geometry/bounds</td>
+</tr>
+<tr class="even">
+<td><code>GET /v1/trips/:id/days</code></td>
+<td>日历与日摘要</td>
+<td>days/overnight/cost/conflicts</td>
+</tr>
+<tr class="odd">
+<td><code>GET /v1/booking/transport/search</code></td>
+<td>航班/车次搜索</td>
+<td>origin/destination/date/party/time_window → authorized offers</td>
+</tr>
+<tr class="even">
+<td><code>GET /v1/booking/hotels/search</code></td>
+<td>酒店列表/地图</td>
+<td>city/checkin/checkout/rooms/guests/bounds → offers</td>
+</tr>
+<tr class="odd">
+<td><code>GET /v1/booking/offers/:id</code></td>
+<td>票价/房型详情</td>
+<td>fare/rules/availability/expiry/source</td>
+</tr>
+<tr class="even">
+<td><code>POST /v1/booking/quotes/revalidate</code></td>
+<td>购买前复核</td>
+<td>offer_id/party → final price/stock/terms</td>
+</tr>
+<tr class="odd">
+<td><code>POST /v1/booking/orders</code></td>
+<td>合作方创建订单</td>
+<td>quote_id/travelers/contact/idempotency_key → order/pending</td>
+</tr>
+<tr class="even">
+<td><code>GET /v1/booking/orders/:id</code></td>
+<td>支付与出票状态</td>
+<td>supplier state + updated_at + next_action</td>
+</tr>
+<tr class="odd">
+<td><code>POST /v1/booking/orders/:id/service/preview</code></td>
+<td>售后费用预览</td>
+<td>action/change → rules/fees/affected_nodes</td>
+</tr>
+</tbody>
+</table>
+<p>标准错误码
+<code>INPUT_AMBIGUOUS,PLAN_INFEASIBLE,NO_REALTIME_SUPPLY,QUOTE_EXPIRED,VERSION_CONFLICT,PERMISSION_DENIED,CONTENT_PENDING_REVIEW,PROVIDER_TIMEOUT,NO_INVENTORY,ORDER_STATE_UNKNOWN,SUPPLIER_HANDOFF</code>。写接口必须鉴权、幂等和限流；重复提交不产生重复版本、帖子或订单。响应有
+<code>request_id</code>
+便于排障。没有原生下单合同/能力时，订单创建与支付接口保持关闭，前端使用合作方跳转流程。</p>
+<h3 id="83-后端模块与推荐技术栈">8.3 后端模块与推荐技术栈</h3>
+<p>建议客户端 <strong>Flutter</strong>，iOS/Android 相机与 AR 用原生
+Swift/Kotlin 插件；服务端 <strong>NestJS +
+TypeScript</strong>，PostgreSQL +
+PostGIS、Redis、任务队列、对象存储。团队若已有成熟技术栈，可保留契约替换框架。模块拆为
+Identity、Trip、Planner、Assistant、SupplierAdapters、Place、Offer、Community、Moderation、Analytics；先用边界清晰的模块化单体，不在
+R1 拆微服务。</p>
+<pre class="mermaid"><code>flowchart TD
+  A[Flutter App] --&gt; B[NestJS API]
+  B --&gt; C[Postgres PostGIS]
+  B --&gt; D[任务队列与缓存]
+  B --&gt; E[规划与小野编排]
+  E --&gt; F[地图 POI 路线适配器]
+  E --&gt; G[交通酒店商品适配器]
+  E --&gt; H[约束校验器]</code></pre>
+<p>供应商接口
+<code>search/get_details/revalidate_quote/build_deeplink</code>
+一致化；地图商用许可、配额与使用限制在接入时核查。城际列车、航班、酒店、影院团购分别接合法合作方，不能把普通地图搜索结果解释为实时可售库存。外部超时隔离，返回局部可用计划；每一项标其可信度与时间。[R1][R2]</p>
+<h3 id="84-json-契约示例">8.4 JSON 契约示例</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;trip_id&quot;</span><span class="fu">:</span> <span class="st">&quot;trip_demo_01&quot;</span><span class="fu">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;version&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timezone&quot;</span><span class="fu">:</span> <span class="st">&quot;Asia/Shanghai&quot;</span><span class="fu">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;budget&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;total_fen&quot;</span><span class="fu">:</span> <span class="dv">220000</span><span class="fu">,</span> <span class="dt">&quot;scope&quot;</span><span class="fu">:</span> <span class="st">&quot;party&quot;</span><span class="fu">,</span> <span class="dt">&quot;party_size&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">},</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;cost&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;verified_fen&quot;</span><span class="fu">:</span> <span class="dv">60000</span><span class="fu">,</span> <span class="dt">&quot;estimated_min_fen&quot;</span><span class="fu">:</span> <span class="dv">90000</span><span class="fu">,</span> <span class="dt">&quot;estimated_max_fen&quot;</span><span class="fu">:</span> <span class="dv">130000</span><span class="fu">},</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;nodes&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;node_outbound&quot;</span><span class="fu">,</span> <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;intercity_transport&quot;</span><span class="fu">,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;城际交通待查询&quot;</span><span class="fu">,</span> <span class="dt">&quot;data_status&quot;</span><span class="fu">:</span> <span class="st">&quot;unknown&quot;</span><span class="fu">,</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;start_at&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span> <span class="dt">&quot;end_at&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span> <span class="dt">&quot;source&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;locked&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span> <span class="dt">&quot;booked&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span> <span class="dt">&quot;completed&quot;</span><span class="fu">:</span> <span class="kw">false</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;edges&quot;</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;warnings&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;未接入实时班次，请在出发前核对&quot;</span><span class="ot">]</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>这个示例刻意不给未经核验的具体时刻；有供应商数据时
+<code>start_at/end_at</code>
+必须填真实日期时间，并带报价/库存有效期。</p>
+<p><strong>改图预览请求示例：</strong>
+同一个接口接自然语言与点选操作。<code>mode=instruction</code> 时传
+<code>text</code>，<code>mode=replace_node</code> 时传
+<code>target_node_id/candidate_id</code>，两者都必须传
+<code>base_version</code>。</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;mode&quot;</span><span class="fu">:</span> <span class="st">&quot;instruction&quot;</span><span class="fu">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;base_version&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;text&quot;</span><span class="fu">:</span> <span class="st">&quot;第二天下午换成室内活动，酒店别动，总预算不增加&quot;</span><span class="fu">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;client_request_id&quot;</span><span class="fu">:</span> <span class="st">&quot;req_demo_002&quot;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>预览响应包含
+<code>draft_id</code>、<code>affected_node_ids</code>、<code>protected_node_ids</code>、<code>diff[]</code>、<code>cost_before/after</code>、<code>warnings[]</code>
+与 <code>expires_at</code>。提交时
+<code>If-Match: 3</code>，服务端再核对草稿有效期与报价；成功返回版本
+4，冲突返回 <code>VERSION_CONFLICT</code>
+和服务端最新版本号。前端不能只凭 AI 文字推断图已经保存。</p>
+<h2 id="9-隐私安全内容和质量">9 隐私、安全、内容和质量</h2>
+<p>位置、相机、相册、通知分别在功能使用时请求；不授权仍可手填城市、浏览地点内容和使用基础计划。轨迹与未满十四周岁未成年人的个人信息可能属于敏感个人信息，需评估必要性、单独同意、留存期限与删除流程。[R7]
+分享链接可撤销、过期；公开帖剔除图片
+EXIF、隐藏酒店房号、订单号、精确实时位置。照片默认私密，发布公开需要用户显式选择。</p>
+<p>UGC 有内容审核、举报、申诉、屏蔽、封禁与运营审计；AI
+内容按适用规则做显式和隐式标识，服务形态与备案义务由上线前法务判断。[R5][R6]
+服务端校验所有写入，限制上传类型和大小，媒体扫描，防刷和反垃圾。LLM
+输入最小化，对外部文本做提示注入隔离；供应商密钥不下发客户端。</p>
+<p>性能目标供内测调整：已缓存行程首屏 &lt; 2 秒，节点候选预览 P95 &lt; 8
+秒，完整生成 P95 &lt; 30 秒，超时转后台任务；图谱滚动目标 60
+fps。按中低端 Android 和近三代 iPhone
+实测；离线仍能读取已保存行程。需测动态字号、屏幕阅读器、触控面积、弱网、权限拒绝、定位漂移、商品过期和并发编辑。</p>
+<h2 id="10-agent-开发任务包和交接顺序">10 Agent
+开发任务包和交接顺序</h2>
+<h3 id="101-建议仓库结构">10.1 建议仓库结构</h3>
+<pre class="text"><code>xiangye/
+  apps/mobile/            Flutter 页面、状态管理、原生桥接
+  apps/admin/             运营审核 Web
+  services/api/           NestJS API 模块
+  packages/contracts/     OpenAPI、schema、错误码
+  packages/design-tokens/ 颜色、尺寸、组件规范
+  infra/                  数据库迁移、队列、环境示例
+  docs/                   本说明书、决策记录、供应商矩阵</code></pre>
+<h3 id="102-可逐项派发的任务">10.2 可逐项派发的任务</h3>
+<table>
+<thead>
+<tr class="header">
+<th>包</th>
+<th>负责范围</th>
+<th>必须交付</th>
+<th>前置依赖与验收</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A 契约与基础设施</td>
+<td>monorepo、CI、数据库、OpenAPI、统一错误</td>
+<td>可启动开发环境、迁移、模拟数据、契约校验</td>
+<td>先于所有包；schema 审核通过</td>
+</tr>
+<tr class="even">
+<td>B 设计系统与导航</td>
+<td>Logo、tokens、共用组件、S01/S02/S15</td>
+<td>Flutter 组件与截图、无障碍标注</td>
+<td>基于 A；图 01 关键布局可复现</td>
+</tr>
+<tr class="odd">
+<td>C 规划数据接入</td>
+<td>POI、路线、供应商适配、来源状态</td>
+<td>mock + sandbox 实现、限流、超时回退</td>
+<td>基于 A；不编造班次</td>
+</tr>
+<tr class="even">
+<td>D 规划引擎</td>
+<td>约束求解、预算、节点图、局部 patch</td>
+<td>服务、单元与契约测试、冲突示例</td>
+<td>基于 A/C；约束不变量通过</td>
+</tr>
+<tr class="odd">
+<td>E 行程地图客户端</td>
+<td>S03–S07、S17–S20、多日地图、候选、差异、版本</td>
+<td>三天地图交互录屏、列表同步、离线回退</td>
+<td>基于 B/D；点图标替换后两视图同版</td>
+</tr>
+<tr class="even">
+<td>F 小野助手</td>
+<td>工具白名单、流式对话、S08、在途建议</td>
+<td>工具日志、注入/无数据测试、消息卡</td>
+<td>基于 D/E；写操作只生成草稿</td>
+</tr>
+<tr class="odd">
+<td>G 出发与通知</td>
+<td>S09、下一站、导航唤起、提醒</td>
+<td>真实设备场景、权限回退</td>
+<td>基于 E；已完成节点不被改</td>
+</tr>
+<tr class="even">
+<td>H 机酒与商品连接</td>
+<td>S12、S21–S27、班次/酒店搜索、详情、验价、跳转/下单、订单与售后</td>
+<td>完整 mock 流、授权适配器、状态机和失效测试</td>
+<td>商务接入后；无授权关闭原生支付</td>
+</tr>
+<tr class="odd">
+<td>I 实景与社区</td>
+<td>S10/S11/S13/S14、审核后台 S16</td>
+<td>权限、审核、举报、删除闭环</td>
+<td>基于 A/B；低精度回退</td>
+</tr>
+<tr class="even">
+<td>J 质量与上线</td>
+<td>端到端、性能、安全、隐私、埋点</td>
+<td>测试报告、回滚预案、上线门槛</td>
+<td>每包持续参与</td>
+</tr>
+</tbody>
+</table>
+<p>每个 Agent 开始前读本书对应页面、契约和验收；提交 PR
+需包含改动范围、API 兼容性、截图/录屏、测试、已知限制与回滚步骤。A
+先固定共享 schema，其他包并行做 mock 页面；任何 breaking change
+先写决策记录并通知依赖包。任务包不是要求同时上线所有功能，R1/R2
+的依赖由版本矩阵控制。</p>
+<h3 id="103-给主-agent-的启动指令">10.3 给主 Agent 的启动指令</h3>
+<blockquote>
+<p>请以《向野 App 全项目开发说明书》为产品规格，以《向野 App
+界面设计图》《多日行程地图交互稿》《机酒预订界面稿》为布局和交互参考。先建立仓库、统一
+schema、模拟数据、页面路由与设计 tokens；再按任务包 A→B/C→D/E/F/G 实现
+R1。必须先做三天地图的“全部日期/单日/日历”切换、地图点与时间轴联动、点图标替换，再做其他扩展。机酒完成
+mock
+的搜索—详情—确认—订单完整流程；有授权供应商后接真实报价和预订。每完成一个任务包，提交代码、接口文档、页面截图或录屏、关键验收用例、未完成能力清单。严禁把示意车次、价格、库存当作实时数据；任何
+AI
+写操作先生成预览草稿，只有用户确认才提交。遇到未决选择先实现本文默认方案，并在决策记录中列出可替换点。</p>
+</blockquote>
+<p>建议第一次开发交付一个可运行样例：S03 输入三天行程 → S04 生成 → S17
+全部日期地图 → S18 单日地图点选 → S06 替换 → S07 确认 → S08 小野解释 →
+S20 预算 → S09 出发；机酒的 S21–S26 先用显式模拟供应商跑通
+UI。之后逐步接真实地图、供应商及订单状态，并复跑第 11 节验收。</p>
+<h3 id="104-阶段里程碑">10.4 阶段里程碑</h3>
+<p>M0（1–2 周）完成界面、可交互三日地图、机酒 mock
+路径、契约和供应商可用性矩阵；M1（4–7 周）实现 R1
+地图规划、双模式改图、小野、出发、机酒查询入口与基础分享；M2（取决于合作接入，预计
+4–8
+周）实现授权机酒搜索、房型/票价、预订跳转或合作方原生下单、订单状态及团购；M3（约
+4–6 周）实现地点实景与社区。以上是假设 1 产品、1 设计、2–3 客户端、2–3
+服务端、1 测试且供应商提供沙箱的粗略排期，非承诺。</p>
+<h2 id="11-端到端验收清单">11 端到端验收清单</h2>
+<ol type="1">
+<li>输入出发地、目的地、两天一晚、人数和预算后，图上有往返、城市间交通节点、酒店、逐日游玩和
+A→B 市内交通边；未接实时供应商时具体班次标待查询。</li>
+<li>每个节点能打开详细来源、时刻/时间窗、价格状态和上下游交通；预算合计说明是否含人均、房晚与预留金。</li>
+<li>点第二天下午节点可替换室内活动，先预览时间与费用差，确认才写版本，取消不改变原图。</li>
+<li>对小野说“明天晚一点出发但酒店别动”，锁定酒店仍在；目标不明时追问，工具无真实报价时不捏造。</li>
+<li>两终端同时修改收到冲突而不静默覆盖；重复点确认也只提交一次。</li>
+<li>已订酒店和已完成景点不会被自动删除；要换已订酒店时明确原供应商退改入口。</li>
+<li>出发页显示下一站的地点、方式、预计费用和最晚离开建议；无延误数据不声称实时晚点。</li>
+<li>商品失效/售罄禁用购买，跳转但无回流时只显示“已跳转”。</li>
+<li>无位置或相机权限能看地点内容；弱定位时让用户确认地点；图片发布剔除
+EXIF。</li>
+<li>社区帖子默认私密，公开发布明确确认；举报、审核、删除和申诉在后台可追踪。</li>
+<li>App 弱网、生成任务失败、供应商超时、模型非法 JSON、POI
+闭馆、预算不足、夜间换乘等场景给可执行恢复入口。</li>
+<li>三日行程在地图上能切全部日期和单日，地图点与时间轴同步；点图标进入替换，保存后图、预算、日历同版本更新；跨日酒店和长途交通表达正确。</li>
+<li>机票/火车票/酒店的搜索、筛选、详情、验价、确认和订单状态 mock
+路径可跑通；无供应商接入时显式标演示且不能虚构实时班次或可售库存。</li>
+<li>下单超时先查单不重复创建；退款/改签影响图谱节点但不自动购买替代商品。</li>
+<li>设计图中图 01–22 的主要布局、状态和导航在真机可复现，Logo
+以授权定稿替换概念稿后再正式上线。</li>
+</ol>
+<h2 id="12-外部依赖待决策项与资料来源">12
+外部依赖、待决策项与资料来源</h2>
+<p>上线需要地图服务商业许可与配额、交通/酒店/活动供应商授权和合同、账号与内容合规、品牌与商标检索、App
+分发与支付责任划分。没有获得授权的类别保持入口说明或隐藏，不能由爬虫或模型补数据。用户可先指挥
+Agent 完成 mock + R1 能力，再逐项替换真实适配器。</p>
+<p>以下官方资料于 2026 年 9 月 25
+日核查；开放权限、价格、合同和法规适用性需在接入及上线时复核：</p>
+<ul>
+<li><a href="https://lbs.amap.com/api/webservice/guide/api/newroute">R1
+高德地图路径规划 2.0</a>：市内路线种类及结果随数据变化。</li>
+<li><a
+href="https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch">R2
+高德地图地点搜索 2.0</a>：关键字、周边、区域与 ID 检索。</li>
+<li><a
+href="https://developer.apple.com/documentation/arkit/tracking-geographic-locations-in-ar">R3
+Apple ARKit 地理位置追踪</a>：地理追踪地点可用性限制。</li>
+<li><a href="https://developers.google.com/ar/develop/geospatial">R4
+Google ARCore Geospatial</a>：地理锚点设备及区域覆盖条件。</li>
+<li><a
+href="https://www.cac.gov.cn/2025-03/14/c_1743654684782215.htm">R5
+人工智能生成合成内容标识办法</a>：适用场景的显式和隐式标识。</li>
+<li><a
+href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm">R6
+生成式人工智能服务管理暂行办法</a> 与 <a
+href="https://www.cac.gov.cn/2019-12/20/c_1578375159509309.htm">网络信息内容生态治理规定</a>：AI
+服务与社区管理。</li>
+<li><a
+href="https://www.cac.gov.cn/2021-08/20/c_1631050028355286.htm">R7
+中华人民共和国个人信息保护法</a>：敏感信息、权限和用户权利。</li>
+<li><a
+href="https://apps.apple.com/cn/app/%E6%90%BA%E7%A8%8B%E6%97%85%E8%A1%8C-%E8%AE%A2%E9%85%92%E5%BA%97%E6%9C%BA%E7%A5%A8%E7%81%AB%E8%BD%A6%E7%A5%A8/id379395415">R8
+携程旅行 App
+官方应用介绍</a>：公开列示机票、火车票、酒店、景点等能力。</li>
+<li><a href="https://wanderlog.com/">R9 Wanderlog
+官方产品页</a>：公开展示行程与地图同屏规划。</li>
+<li><a href="https://ct.ctrip.com/thinktanks/708">R10
+携程商旅订单联动介绍</a>：公开说明行程调整对相关订单的影响。</li>
+</ul>
+</body>
+</html>

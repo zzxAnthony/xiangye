@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="向野 双向路径标志">
+  <rect width="512" height="512" rx="112" fill="#F7F5EB"/>
+  <path d="M115 359c29-47 61-60 101-40 39 20 67 5 82-39 16-46 54-51 94-108" fill="none" stroke="#2F604A" stroke-width="30" stroke-linecap="round"/>
+  <circle cx="109" cy="367" r="29" fill="#2F604A"/>
+  <circle cx="377" cy="171" r="33" fill="#BCE39A" stroke="#2F604A" stroke-width="13"/>
+  <path d="m370 91 20-28 10 33 34 9-31 17" fill="#DCEE9B"/>
+</svg>

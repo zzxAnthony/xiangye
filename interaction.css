@@ -1,0 +1,29 @@
+.assistant-widget{bottom:var(--assistant-bottom,22px)}
+.assistant-fab{touch-action:none;cursor:grab}
+.assistant-fab:active{cursor:grabbing}
+.journal-map-top .journal-layer-toggle{width:auto;min-width:82px;display:flex;align-items:center;gap:5px;padding:0 8px}
+.journal-map-top .journal-layer-toggle span{font-size:10px;color:inherit;letter-spacing:0;white-space:nowrap}
+@media(max-width:720px){
+  .mobile-nav{height:calc(64px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}
+  .mobile-nav button{flex:1;min-width:0;padding:0 2px;white-space:nowrap}
+  .mobile-nav button span{font-size:9px}
+  .assistant-widget{right:14px;bottom:var(--assistant-bottom,calc(82px + env(safe-area-inset-bottom)))}
+  .assistant-pop{height:min(420px,calc(100dvh - 175px))}
+  .journal-toolbar-actions{flex-wrap:wrap}
+  .journal-map-top .journal-layer-toggle{min-width:78px}
+}
+
+@media(max-width:400px){.market-filter{flex-wrap:wrap}.market-filter form,.market-filter label{max-width:none;width:100%}.market-filter label{display:flex;justify-content:flex-end}.market-filter select{max-width:180px}}
+.journal-workspace{grid-template-columns:minmax(0,1.75fr) minmax(360px,.82fr);height:min(740px,calc(100vh - 220px));min-height:625px}
+.journal-map-canvas{background:#e9f0e9}
+.map-stop-pin{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;transform:translateY(2px)}
+.map-stop-pin .map-marker{flex:none;width:34px;height:34px;border-width:3px;box-shadow:0 3px 10px #1b433c55}
+.map-stop-name{display:block;max-width:105px;overflow:hidden;text-overflow:ellipsis;background:#fffffff5;border:1px solid #e2e9de;border-radius:7px;padding:5px 8px;color:#204a36;font-size:11px;font-weight:800;box-shadow:0 3px 12px #23402b26}
+.maplibregl-canvas{outline:0}
+@media(max-width:900px){.journal-workspace{height:auto;display:flex;flex-direction:column}.journal-map{height:515px}}
+@media(max-width:640px){.journal-map{height:440px}.map-stop-name{font-size:10px;max-width:80px;padding:4px 5px}}
+@media(max-width:720px){
+  .journal-map-canvas .leaflet-bottom{bottom:68px}
+  .journal-map-canvas .journal-map-scale{bottom:83px}
+}
+.map-stop-pin.reverse{flex-direction:row-reverse;transform:translate(calc(34px - 100%),2px)}
