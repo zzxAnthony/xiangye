@@ -29,11 +29,11 @@ python3 server.py
 
 ## 视觉设计
 
-页面采用蓝紫、珊瑚橘和浅色背景的统一配色。发现、计划、机酒玩乐、社区、个人页和悬浮助手共用导航、按钮与卡片样式；手机端保留逐日安排优先的阅读顺序。设计取舍见 [体验调研记录](docs/UX_RESEARCH.md)。
+页面采用暖白、珊瑚橘、蓝紫和浅水蓝的配色。发现、计划、机酒玩乐、社区、个人页和悬浮助手共用导航、按钮与卡片样式；手机端保留逐日安排优先的阅读顺序。计划地图使用定制的「日光」街道样式，优先显示中文地名；全部旅程按日期区分标记，选中某一天后显示地点标签。设计取舍见 [体验调研记录](docs/UX_RESEARCH.md)。
 
 ## 地图与外部数据
 
-默认城市路网与可切换的简洁地图样式由 OpenFreeMap 提供，使用 Leaflet、MapLibre GL 与适配插件渲染；相关前端文件位于 `vendor/`。现有百度 AK 可用于服务端签名地点搜索，但在当前本地地址调用百度 JavaScript API 未通过浏览器端验证；使用百度交互底图需要可用的浏览器端 AK 及对应白名单。精选 POI 的 WGS84 坐标来自 OpenStreetMap Nominatim。主动地点搜索优先调用 `/api/map/search` 的百度地图 POI，服务端把 BD09 坐标转换为 WGS84 供地图与路网使用；百度不可用时回退 `/api/geo/search`。按天路线使用 `/api/geo/route` 调用 Valhalla / OpenStreetMap 公共演示服务。路网服务失败时明确显示错误，不画虚构线路。公共演示服务不保证可用性，正式部署需自有或商用服务额度。
+默认日光街道地图基于 OpenFreeMap Bright 调整，可切换到简洁地图样式；使用 Leaflet、MapLibre GL 与适配插件渲染。地图样式来源及授权见 [地图说明](assets/map/README.md)，相关前端文件位于 `vendor/`。现有百度 AK 可用于服务端签名地点搜索，但在当前本地地址调用百度 JavaScript API 未通过浏览器端验证；使用百度交互底图需要可用的浏览器端 AK 及对应白名单。精选 POI 的 WGS84 坐标来自 OpenStreetMap Nominatim。主动地点搜索优先调用 `/api/map/search` 的百度地图 POI，服务端把 BD09 坐标转换为 WGS84 供地图与路网使用；百度不可用时回退 `/api/geo/search`。按天路线使用 `/api/geo/route` 调用 Valhalla / OpenStreetMap 公共演示服务。路网服务失败时明确显示错误，不画虚构线路。公共演示服务不保证可用性，正式部署需自有或商用服务额度。
 
 百度地图 AK 与用户提供的 SK 已在本机 `.env.local` 配置并验证，地点检索可返回结果。密钥只放服务端，不会送到浏览器；部署到其他机器时需要重新配置。
 

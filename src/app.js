@@ -66,7 +66,7 @@ const state={
   trips: Array.isArray(persisted.trips)?persisted.trips:[],
   currentId:persisted.currentId||null, saved:persisted.saved||[], likedPosts:persisted.likedPosts||[], checked:persisted.checked||{}, posts:persisted.posts||[], name:persisted.name||'旅行者',
   profile:persisted.profile||{interests:['自然','慢游'],pace:'慢一点',budgetLevel:'适中',group:'朋友',departureCity:'',walking:'适中',personalization:true}, events:persisted.events||[],
-  page:location.hash.slice(2)||'discover', selectedDay:'all', selectedNode:null, planView:'map', mapLayer:'bright',modal:null, search:'', searchResults:[], searchLoading:false, searchError:'',
+  page:location.hash.slice(2)||'discover', selectedDay:'all', selectedNode:null, planView:'map', mapLayer:'daylight',modal:null, search:'', searchResults:[], searchLoading:false, searchError:'',
   planDestination:'',planPrompt:'',planBusy:false,planError:'',planDraft:null,planRebuild:false,plannerExpanded:false,planPlaces:[],planPlaceQuery:'',planPlaceResults:[],planPlaceBusy:false,planPlaceError:'', bookingTab:'transport', offerKind:null, selectedOffer:null, assistantMessages:[], toast:'', discoverFilter:'全部', communityFilter:'精选',
   assistantOpen:false,assistantBusy:false,journeyDay:null,modelConfigured:false,modelProvider:'',assistantBottom:null,assistantDragSuppress:false,route:null,routeLoading:false,routeError:'',routeDay:null,plannerTab:'itinerary',placeQuery:'',placeResults:[],placeLoading:false,bookingQuery:'',bookingResults:[],bookingBusy:false,importMatches:[],
   marketCategory:'all',marketSearch:'',marketSort:'featured',marketSaved:marketPersisted.saved||[],marketOrders:marketPersisted.orders||[],marketPlaces:[],marketPlaceQuery:'',marketPlaceBusy:false,marketPlaceError:'',
@@ -183,13 +183,13 @@ function initMap(){
   const loadingMap=map;
   setTimeout(()=>{if(map===loadingMap){const loading=$('#mapLoading');if(loading&&!loading.classList.contains('is-hidden'))loading.textContent='地图暂未加载，请检查网络；逐日安排仍可使用。';}},15000);
   if(L.maplibreGL&&window.maplibregl){
-    const layer=L.maplibreGL({style:`https://tiles.openfreemap.org/styles/${state.mapLayer==='positron'?'positron':'bright'}`,interactive:false}).addTo(map);
+    const layer=L.maplibreGL({style:state.mapLayer==='positron'?'https://tiles.openfreemap.org/styles/positron':'assets/map/xiangye-daylight.json',interactive:false}).addTo(map);
     layer.getMaplibreMap()?.once('idle',finishLoading);
   }else{
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).on('load',finishLoading).addTo(map);
   }
   L.control.zoom({position:'bottomright'}).addTo(map);
-  const palette=['#5548d9','#e95448','#4d83d2'];
+  const palette=['#6954e8','#fa705c','#238eb6','#bd68aa'];
   const visible=allNodes().filter(n=>state.selectedDay==='all'||n.day===state.selectedDay);
   const points=[];markers=[];
   if(state.selectedDay!=='all'&&state.routeDay===state.selectedDay&&state.route){
@@ -198,8 +198,8 @@ function initMap(){
   visible.forEach(n=>{
     if(!Number.isFinite(Number(n.lat))||!Number.isFinite(Number(n.lng))||n.lat===null||n.lng===null)return;
     const index=trip().days[n.day-1].nodes.findIndex(x=>x.id===n.id)+1;
-    const html=`<span class="map-stop-pin ${Number(n.lng)>Number(dest.lng)?'reverse':''}"><span class="map-marker ${state.selectedNode===n.id?'selected':''}" style="--marker:${palette[(n.day-1)%3]}">${index}</span>${state.selectedDay==='all'?'':`<span class="map-stop-name">${safe(n.name)}</span>`}</span>`;
-    const marker=L.marker([n.lat,n.lng],{icon:L.divIcon({html,className:'xy-pin',iconSize:[34,40],iconAnchor:[17,38]})}).addTo(map);
+    const html=`<span class="map-stop-pin ${Number(n.lng)>Number(dest.lng)?'reverse':''} ${state.selectedDay==='all'?'map-all-days':'map-day-focus'}"><span class="map-marker ${state.selectedNode===n.id?'selected':''}" style="--marker:${palette[(n.day-1)%palette.length]}">${state.selectedDay==='all'?`<small>D${n.day}</small>`:''}<b>${index}</b></span><span class="map-stop-name">${safe(n.name)}</span></span>`;
+    const marker=L.marker([n.lat,n.lng],{icon:L.divIcon({html,className:'xy-pin',iconSize:[40,46],iconAnchor:[20,42]})}).addTo(map);
     marker.bindTooltip(`${safe(n.time)} · ${safe(n.name)}`,{direction:'top',offset:[0,-28]});
     marker.on('click',()=>{state.selectedNode=n.id;state.modal={type:'node',nodeId:n.id};recordEvent('place_view',{city:trip().destination,placeId:n.placeId||'',tags:placeCatalog.find(p=>p.id===n.placeId)?.tags||[]});render();});
     markers.push(marker);points.push([n.lat,n.lng]);
@@ -286,7 +286,7 @@ if(a==='toggleLock'||a==='toggleDone'){const n=allNodes().find(x=>x.id===target.
 if(a==='completeCurrent'||a==='completeJourneyStop'){const n=a==='completeJourneyStop'?allNodes().find(x=>x.id===target.dataset.id):allNodes().find(x=>!x.done);if(!n||n.done)return;if(addDate(trip().start,n.day-1)>dateOffset(0)){toast('这一天尚未开始，出发后再记录到达');return;}const original=trip().days[n.day-1].nodes.find(x=>x.id===n.id);original.done=true;original.completedAt=Date.now();save();render();toast(`${n.lat != null && n.lng != null?'已记录到达':'已完成安排'}：${n.name}`);return;}
 if(a==='showBudget'){state.planView='budget';navigate('plan');return;}
 if(a==='fitMap'){if(map){const p=allNodes().filter(n=>(state.selectedDay==='all'||n.day===state.selectedDay)&&n.lat!=null&&n.lng!=null).map(n=>[n.lat,n.lng]);if(p.length>1)map.fitBounds(p,{padding:[50,50],animate:false});}return;}
-if(a==='toggleMapLayer'){state.mapLayer=state.mapLayer==='bright'?'positron':'bright';render();return;}
+if(a==='toggleMapLayer'){state.mapLayer=state.mapLayer==='daylight'?'positron':'daylight';render();return;}
 if(a==='search'){state.search=$('#searchInput')?.value||state.search;searchPlaces();return;}
 if(a==='addSearchedPlace'){const p=state.searchResults.find(x=>x.name===target.dataset.place);if(p){state.selectedDay=1;addPlace(p);navigate('plan');}return;}
 if(a==='transportSearch'||a==='hotelSearch'){toast('尚未接入授权供应商，暂时无法查询实时库存与报价。');return;}
