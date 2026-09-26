@@ -107,7 +107,7 @@ function discoverJourneyCard(){
 function discoverPage(){
   const ranked=recommendDestinations(destinations,state.profile,state.profile.personalization?state.events:[],state.trips);
   const filtered=state.discoverFilter==='全部'?ranked:ranked.filter(d=>d.type.includes(state.discoverFilter)||({'城市':['杭州','成都'],'自然':['大理','黄山','乌兰布统'],'周末':['杭州','黄山']}[state.discoverFilter]||[]).includes(d.name));
-  const lead=state.trips.length?discoverJourneyCard():`<section class="hero" style="background-image:linear-gradient(90deg,rgba(17,47,35,.80),rgba(17,47,35,.42) 47%,rgba(0,0,0,.05)),url('${photos.hero}')"><div class="hero-content"><span class="hero-pill">${ico('spark',14)} 向野灵感提案</span><h2>这周末，<br/>去山野间透透气。</h2><p>从城市出走，在风里找回自己的节奏。</p><button class="light-btn" data-nav="new">规划我的旅程 ${ico('arrow',18)}</button></div><div class="hero-index">01 <span>/</span> 04</div></section>`;
+  const lead=state.trips.length?discoverJourneyCard():`<section class="hero" style="background-image:linear-gradient(90deg,rgba(37,35,91,.88),rgba(71,62,151,.56) 52%,rgba(48,46,116,.12)),url('${photos.dali}')"><div class="hero-content"><span class="hero-pill">${ico('spark',14)} 向野灵感提案</span><h2>让周末，<br/>换一种节奏。</h2><p>从城市出发，去看更开阔的风景。</p><button class="light-btn" data-nav="new">规划我的旅程 ${ico('arrow',18)}</button></div><div class="hero-index">01 <span>/</span> 04</div></section>`;
   return `${topbar('把日子过成喜欢的样子','发现')}<main class="main-content discover-page"><div class="intro-line"><span class="eyebrow">GOOD DAY, EXPLORER</span><h1>去远方，也去<br/><em>遇见自己。</em></h1><p>路线不必太满，风景自会到来。<br/>从一个念头开始，规划一场刚刚好的旅行。</p></div>${lead}<section class="quick-plan"><div class="quick-heading"><span class="quick-icon">${ico('route',22)}</span><div><strong>一句话，开始一段旅程</strong><small>小野会陪你把沿途安排得刚刚好</small></div></div><button class="quick-input" data-nav="new"><span>比如：从上海出发，去杭州过一个松弛的周末…</span>${ico('arrow',18)}</button></section><section class="dest-section">${sectionHeader('EXPLORE DESTINATIONS','灵感目的地','查看全部','search')}<div class="filter-row">${['全部','周末','自然','城市'].map(f=>`<button data-filter="${f}" class="filter-chip ${state.discoverFilter===f?'active':''}">${f}</button>`).join('')}</div><div class="dest-grid">${filtered.map((d,i)=>destinationCard(d,i===0)).join('')}</div></section><section class="story-section">${sectionHeader('STORIES FROM THE ROAD','路上的故事','走进社区','community')}<div class="story-grid">${samplePosts.slice(0,2).map(p=>`<button class="story-card" data-story="${p.id}"><img src="${p.image}" alt="${safe(p.title)}" loading="lazy"/><div><span>${safe(p.city)} · 野友来信</span><strong>${safe(p.title)}</strong><small>${safe(p.text)}</small></div></button>`).join('')}</div></section></main>`;
 }
 
@@ -183,11 +183,11 @@ function initMap(){
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).on('load',finishLoading).addTo(map);
   }
   L.control.zoom({position:'bottomright'}).addTo(map);
-  const palette=['#2f604a','#dc8451','#607cad'];
+  const palette=['#5548d9','#e95448','#4d83d2'];
   const visible=allNodes().filter(n=>state.selectedDay==='all'||n.day===state.selectedDay);
   const points=[];markers=[];
   if(state.selectedDay!=='all'&&state.routeDay===state.selectedDay&&state.route){
-    state.route.legs.forEach(leg=>{if(leg.geometry?.length){L.polyline(leg.geometry,{color:'#fff',weight:9,opacity:.95,lineCap:'round',lineJoin:'round'}).addTo(map);L.polyline(leg.geometry,{color:'#28764d',weight:5,opacity:.98,lineCap:'round',lineJoin:'round'}).addTo(map);}});
+    state.route.legs.forEach(leg=>{if(leg.geometry?.length){L.polyline(leg.geometry,{color:'#fff',weight:9,opacity:.95,lineCap:'round',lineJoin:'round'}).addTo(map);L.polyline(leg.geometry,{color:'#5548d9',weight:5,opacity:.98,lineCap:'round',lineJoin:'round'}).addTo(map);}});
   }
   visible.forEach(n=>{
     if(!Number.isFinite(Number(n.lat))||!Number.isFinite(Number(n.lng))||n.lat===null||n.lng===null)return;
