@@ -4,6 +4,20 @@ export const staticMode = location.hostname.endsWith('.github.io') || new URLSea
 
 const chineseNumber = value => ({一:1,二:2,两:2,三:3,四:4,五:5,六:6,七:7,八:8,九:9,十:10}[value] || Number(value));
 const cities = [...new Set(placeCatalog.map(place => place.city))];
+const parsedStartDate = input => {
+  const iso = input.match(/20\d{2}-\d{1,2}-\d{1,2}/)?.[0];
+  const chinese = input.match(/(?:(20\d{2})年)?(\d{1,2})月(\d{1,2})日?/);
+  if (!iso && !chinese) return '';
+  const today = new Date();
+  let year, month, day;
+  if (iso) [year,month,day] = iso.split('-').map(Number);
+  else {year = Number(chinese[1]) || today.getFullYear();month=Number(chinese[2]);day=Number(chinese[3]);}
+  const valid = y => {const d=new Date(y,month-1,day);return d.getFullYear()===y&&d.getMonth()===month-1&&d.getDate()===day;};
+  if (!valid(year)) throw new Error('出发日期无效，请写成“2026-10-10”或“2026年10月10日”。');
+  if (chinese && !chinese[1] && new Date(year,month-1,day)<new Date(today.getFullYear(),today.getMonth(),today.getDate())) year++;
+  if (!valid(year)) throw new Error('出发日期无效，请补全年份。');
+  return `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+};
 
 export function searchStaticPlaces(query, city='') {
   const needle = String(query || '').trim().replace(/(景点|旅游景区|公园|附近|的)/g, '');
@@ -16,11 +30,11 @@ export function interpretStaticPlan(text, mode, current) {
   const input = String(text || '').trim();
   const mentionedCities = cities.filter(city => input.includes(city));
   const destination = mentionedCities.find(city => city !== current?.origin) || current?.destination || '';
-  const origin = input.match(/(?:从|由)([^，。\s]{2,12}?)(?:出发|到|去|前往)/)?.[1] || '';
+  const origin = (input.match(/(?:从|由)([^，。\s]{2,12}?)(?:出发|到|去|前往)/)?.[1] || '').replace(/(?:自驾|坐高铁|乘高铁|坐火车|乘火车|坐飞机|乘飞机|开车|乘车)$/, '');
   const days = chineseNumber(input.match(/([一二两三四五六七八九十\d]{1,2})\s*天/)?.[1]);
   const party = chineseNumber(input.match(/([一二两三四五六七八九十\d]{1,2})\s*人/)?.[1]);
   const budget = Number(input.match(/(?:预算|花费|控制在)\s*(\d{3,7})/)?.[1]) || 0;
-  const startDate = input.match(/20\d{2}-\d{2}-\d{2}/)?.[0] || '';
+  const startDate = parsedStartDate(input);
   const pace = /轻松|悠闲|慢一点|不赶/.test(input) ? '慢一点' : /充实|多走|紧凑/.test(input) ? '多走走' : '';
   const targetDay = chineseNumber(input.match(/第\s*([一二两三四五六七八九十\d]{1,2})\s*天/)?.[1]);
   const placeNames = placeCatalog.filter(place => place.city === destination && (input.includes(place.name) || input.includes(place.name.split(/[（(·]/)[0]))).map(place => place.name);

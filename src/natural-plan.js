@@ -22,6 +22,7 @@ export function buildNaturalDraft({intent,mode,current,profile,candidates,startF
   if(!city)throw new Error('还没有识别到目的地。请在描述中写明想去的城市。');
   if(mode==='create'){
     const days=Math.max(1,Math.min(14,Number(intent.days)||3));
+    if(intent.startDate && intent.startDate<(minimumDate||startFallback))throw new Error('出发日期已经过去，请修改日期后再生成行程。');
     const start=/^\d{4}-\d{2}-\d{2}$/.test(intent.startDate||'')&&intent.startDate>=(minimumDate||startFallback)?intent.startDate:startFallback;
     const pace=intent.pace||profile.pace||'刚刚好';
     const daily=pace==='慢一点'?2:pace==='多走走'?4:3;

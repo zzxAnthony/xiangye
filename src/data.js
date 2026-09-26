@@ -1,9 +1,10 @@
 export const photos = {
   hero: 'https://images.unsplash.com/photo-1511497584788-876760111969?w=1800&q=85',
   hangzhou: 'assets/hangzhou-west-lake.jpg',
-  dali: 'https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=900&q=85',
-  chengdu: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=900&q=85',
-  huangshan: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900&q=85',
+  dali: 'assets/dali-erhai.jpg',
+  chengdu: 'assets/chengdu-skyline.jpg',
+  huangshan: 'assets/huangshan.jpg',
+  wulanbutong: 'assets/wulanbutong.jpg',
   hotel: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=85',
   coffee: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=900&q=85',
 };
@@ -13,6 +14,7 @@ export const destinations = [
   { id:'dali', name:'大理', province:'云南', tagline:'去有风的地方，把日子过慢', type:'自然疗愈', days:'4 天 3 晚', image:photos.dali, color:'#90aab0', lat:25.606, lng:100.267 },
   { id:'chengdu', name:'成都', province:'四川', tagline:'在烟火气里找到刚好的松弛', type:'城市烟火', days:'3 天 2 晚', image:photos.chengdu, color:'#bb9369', lat:30.657, lng:104.066 },
   { id:'huangshan', name:'黄山', province:'安徽', tagline:'山路有尽，风景无尽', type:'山野徒步', days:'2 天 1 晚', image:photos.huangshan, color:'#7e9475', lat:30.132, lng:118.169 },
+  { id:'wulanbutong', name:'乌兰布统', province:'内蒙古', tagline:'向草原出发，去看风和旷野', type:'草原自驾', days:'4 天 3 晚', image:photos.wulanbutong, color:'#ae8d66', lat:42.569, lng:117.239 },
 ];
 
 export const sampleDays = [
